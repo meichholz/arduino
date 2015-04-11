@@ -16,3 +16,10 @@ the binary runs straight away (/opt/arduino-1.6.3/arduino).
 
 nuff said. file type detection is a miracle.
 
+## Rough Estimates
+
+* `digitalWrite()` takes approx. 5 microseconds, or roughly 80 clock cycles at 16 MHz.
+* The `loop()` accounts for some 1 micro second itself.
+* practically the limit for bitbanging *fairly* below 100 kHz.
+
+

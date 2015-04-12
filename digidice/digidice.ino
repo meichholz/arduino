@@ -25,7 +25,7 @@ void loop() {
   }
   next_tick--;
   if (next_tick <= 0) {
-    next_tick = 10;
+    next_tick = 15;
     pSeg->stepUp();
   }
   pSeg->print();

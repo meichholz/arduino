@@ -7,14 +7,27 @@ const int SevenSeg::segment_pins[] = {
 };
 
 static unsigned char cgen_digits[] = {
-  B00000001,
-  B00000011,
-  B00000111,
-  B00001111,
-  B00011111,
-  B00111111,
+  B00111111, // 0 ...
+  B00001100,
+  B01011011,
+  B01011110,
+  B01101100,
+  B01110110,
+  B01110111,
+  B00011100,
   B01111111,
-  0xFF,
+  B01111110, // ... 9
+  B01111101, // A ...
+  B01100111,
+  B01000011,
+  B01001111,
+  B01110011,
+  B01110001, // F ...
+  B00000010, // underscore
+  B01000000, // minus
+  B00010000, // top
+  B00000000,
+    0xFF,
 };
 
 static unsigned char cgen_anim_inverse_eight[] = {

@@ -13,7 +13,7 @@ class SevenSeg {
     void stepUp();
     void setChar(char ch);
     void setNumber(int i);
-    void print();
+    void refresh();
 
   private:
     unsigned char active_bits;

@@ -38,9 +38,10 @@ static unsigned char cgen_digits[] = {
   B01001111,
   B01110011,
   B01110001, // F ...
-  B00000010, // underscore
+  B00000010, // 16: underscore
   B01000000, // minus
   B00010000, // top
+  B01011001, // Questionmark
   B00000000,
     0xFF,
 };
@@ -123,9 +124,11 @@ void SevenSeg::setChar(char ch)
   else if (ch>='A' && ch<='F')
     active_bits = SevenSeg::generators[digits][ch-'A'+10];
   else if (ch=='_')
-    active_bits = SevenSeg::generators[digits][17];
+    active_bits = SevenSeg::generators[digits][16];
   else if (ch=='-')
-    active_bits = SevenSeg::generators[digits][18];
+    active_bits = SevenSeg::generators[digits][17];
+  else if (ch=='?')
+    active_bits = SevenSeg::generators[digits][19];
   else
     active_bits = 0;
 }
@@ -136,16 +139,16 @@ void SevenSeg::setNumber(int i)
     active_bits = SevenSeg::generators[digits][i];
 }
 
-void SevenSeg::print()
+void SevenSeg::refresh()
 {
-  for (int segment = 0; segment < 8; segment++) {
+  for (int segment = 0; segment < 7; segment++) {
     unsigned char mask = 1<<segment;
     if (active_bits & mask) {
       set(segment);
     }
   }
   delayMicroseconds(500);
-  for (int segment = 0; segment < 8; segment++) {
+  for (int segment = 0; segment < 7; segment++) {
     clear(segment);
   }
 }

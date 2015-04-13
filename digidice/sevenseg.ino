@@ -1,11 +1,25 @@
 #include "sevenseg.h"
 
+// we assume straight wiring of a seven seg display.
+// common cathode on 3 and 7, counted counterclockwise.
+// 1 -> D2 ... 10 -> D9
+
+// here we abstract real wiring to a symbolic one.
+// we keep the ordering of the display chip, but map the decimal point out of range:
+//
+//   4
+//  5 3
+//   6
+//  0 2
+//   1   (7)
 const int SevenSeg::segment_pins[] = {
   2, 3, 4, 6, 7, 8, 9,
   5, // decimal point
   -1
 };
 
+// the bits in the character generators map straight into segment pin indices,
+// that means that the decimal point would be 1<<7, and segment 0 is B00000001
 static unsigned char cgen_digits[] = {
   B00111111, // 0 ...
   B00001100,

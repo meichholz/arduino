@@ -1,4 +1,5 @@
 #include "sevenseg.h"
+#include "key.h"
 
 class DigiDice {
 
@@ -11,39 +12,33 @@ class DigiDice {
 
   private:
 
-    void adjustBrightness();
-    void adjustFace();
+    void refreshBrightness();
+    void refreshFace();
     bool pollKey();
 
     int speaker_pin, pulse_pin, key_pin;
 
-    SevenSeg *seg_p;
+    class SevenSeg *seg_p;
+    class Key *key_p;
 
     enum { waiting, rolling, done } state;
 
     int brightness;
     int next_tick;
     int dice;
-    bool key_pressed;
-    bool debounced_state, last_state;
-    int  debounce_ticks;
 } *dice_p;
 
 
 DigiDice::DigiDice(int speaker_pin, int pulse_pin, int key_pin)
 {
   seg_p = new SevenSeg;
-  state = waiting;
+  state = rolling;
   this->speaker_pin = speaker_pin;
   this->pulse_pin = pulse_pin;
-  this->key_pin = key_pin;
+  key_p = new Key(key_pin);
   dice = 1;
   brightness = 0;
   next_tick = 0;
-  debounce_ticks = 0;
-  debounced_state = false;
-  last_state = false;
-  key_pressed = false;
   this->setup();
 }
 
@@ -51,26 +46,11 @@ void DigiDice::setup()
 {
   pinMode(speaker_pin, OUTPUT);
   pinMode(pulse_pin, OUTPUT);
-  pinMode(key_pin, INPUT);
   digitalWrite(speaker_pin, LOW);
 }
 
-bool DigiDice::pollKey()
-{
-  bool new_state = (digitalRead(key_pin) == LOW);
-  if (new_state != last_state) {
-    debounce_ticks = 5;
-    last_state = new_state;
-  } else {
-    debounce_ticks--;
-    if (debounce_ticks<=0) {
-      debounced_state = new_state;
-    }
-  }
-  return debounced_state;
-}
 
-void DigiDice::adjustBrightness()
+void DigiDice::refreshBrightness()
 {
   // prepare next pulse parameter
   brightness--;
@@ -79,7 +59,7 @@ void DigiDice::adjustBrightness()
   }
 }
 
-void DigiDice::adjustFace()
+void DigiDice::refreshFace()
 {
   switch (state) {
     case done:
@@ -97,7 +77,7 @@ void DigiDice::adjustFace()
         if (dice > 6) {
           dice = 1;
         }
-        next_tick = 40;
+        next_tick = 4;
       }
       break;
   }
@@ -109,35 +89,27 @@ void DigiDice::refresh()
   analogWrite(pulse_pin, brightness / 10);
   // audio feedback
   tone(speaker_pin, 20 * brightness);
-  adjustBrightness();
-  bool pressed = pollKey();
-  if (pressed) {
-    if (!key_pressed) { // act just on edge
-      // acklowledge edge
-      key_pressed = true;
-      // state up
-      switch (state) {
-        case waiting:
-          state = rolling;
-          break;
-        case rolling:
-          state = done;
-          break;
-        case done:
-          state = waiting;
-          break;
-      }
+  refreshBrightness();
+  key_p->refresh();
+  if (key_p->is_clicked()) {
+    // state up
+    switch (state) {
+      case waiting:
+        state = rolling;
+        break;
+      case rolling:
+        state = done;
+        break;
+      case done:
+        state = waiting;
+        break;
     }
   }
-  else
-  {
-    key_pressed = false; // acklowledge release
-  }
-  adjustFace();
+  refreshFace();
   seg_p->refresh(); // make the dice value visible
 }
 
-// keep the arduino framework plating at a logical minimum
+// --- keep the arduino framework plating at a logical minimum
 
 void setup() {
   dice_p = new DigiDice(12, 5, 11);

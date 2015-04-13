@@ -14,6 +14,7 @@
 //   1   (7)
 const int SevenSeg::segment_pins[] = {
   2, 3, 4, 6, 7, 8, 9,
+  -1,
   5, // decimal point
   -1
 };
@@ -113,6 +114,26 @@ void SevenSeg::stepUp()
   if (generator[current_step] & 0x80)
     current_step = 0;
   active_bits = generator[current_step];
+}
+
+void SevenSeg::setChar(char ch)
+{
+  if (ch>='0' && ch<='9')
+    active_bits = SevenSeg::generators[digits][ch-'0'];
+  else if (ch>='A' && ch<='F')
+    active_bits = SevenSeg::generators[digits][ch-'A'+10];
+  else if (ch=='_')
+    active_bits = SevenSeg::generators[digits][17];
+  else if (ch=='-')
+    active_bits = SevenSeg::generators[digits][18];
+  else
+    active_bits = 0;
+}
+
+void SevenSeg::setNumber(int i)
+{
+  if (i>=0 && i<16)
+    active_bits = SevenSeg::generators[digits][i];
 }
 
 void SevenSeg::print()

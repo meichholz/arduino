@@ -11,6 +11,8 @@ class SevenSeg {
     void set(int segment);
     void clear(int segment);
     void stepUp();
+    void setChar(char ch);
+    void setNumber(int i);
     void print();
 
   private:

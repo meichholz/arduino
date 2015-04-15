@@ -139,7 +139,7 @@ void SevenSeg::setNumber(int i)
     active_bits = SevenSeg::generators[digits][i];
 }
 
-void SevenSeg::refresh()
+void SevenSeg::iterate()
 {
   for (int segment = 0; segment < 7; segment++) {
     unsigned char mask = 1<<segment;

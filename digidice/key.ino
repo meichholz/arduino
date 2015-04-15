@@ -9,7 +9,7 @@ Key::Key(int pin) {
   pinMode(pin, INPUT);
 }
 
-void Key::refresh()
+void Key::iterate()
 {
   bool new_state = (digitalRead(pin) == LOW);
   if (new_state != last_state) {

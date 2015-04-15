@@ -1,81 +1,66 @@
 #include "sevenseg.h"
 #include "key.h"
+#include "speaker.h"
+#include "pulse.h"
+
 
 class DigiDice {
 
   public:
     DigiDice(int speaker_pin, int pulse_pin, int key_pin);
     void setup();
-    void refresh();
+    void iterate();
 
     // no destructor
 
   private:
 
-    void refreshBrightness();
     void refreshFace();
     bool pollKey();
-
-    int speaker_pin, pulse_pin, key_pin;
+    void advanceState();
 
     class SevenSeg *seg_p;
     class Key *key_p;
+    class Speaker *speaker_p;
+    class Pulse *pulse_p;
 
-    enum { waiting, rolling, done } state;
+    enum { rolling, done } state;
 
-    int brightness;
     int next_tick;
-    int dice;
+    int face;
 } *dice_p;
 
 
 DigiDice::DigiDice(int speaker_pin, int pulse_pin, int key_pin)
 {
   seg_p = new SevenSeg;
-  state = rolling;
-  this->speaker_pin = speaker_pin;
-  this->pulse_pin = pulse_pin;
   key_p = new Key(key_pin);
-  dice = 1;
-  brightness = 0;
+  speaker_p = new Speaker(speaker_pin);
+  pulse_p = new Pulse(pulse_pin);
+  state = rolling;  
+  face = 1;
   next_tick = 0;
   this->setup();
 }
 
 void DigiDice::setup()
 {
-  pinMode(speaker_pin, OUTPUT);
-  pinMode(pulse_pin, OUTPUT);
-  digitalWrite(speaker_pin, LOW);
 }
 
-
-void DigiDice::refreshBrightness()
-{
-  // prepare next pulse parameter
-  brightness--;
-  if (brightness <= 0) {
-    brightness = 100;
-  }
-}
 
 void DigiDice::refreshFace()
 {
   switch (state) {
     case done:
-      seg_p->setNumber(dice);
-      break;
-    case waiting:
-      seg_p->setChar('?');
+      seg_p->setNumber(face);
       break;
     case rolling:
       // roll the dice, or just wait...
       next_tick--;
       if (next_tick <= 0) {
-        seg_p->setNumber(dice);
-        dice++;
-        if (dice > 6) {
-          dice = 1;
+        seg_p->setNumber(face);
+        if (++face > 6) {
+          face = 1;
         }
         next_tick = 4;
       }
@@ -83,30 +68,28 @@ void DigiDice::refreshFace()
   }
 }
 
-void DigiDice::refresh()
+void DigiDice::advanceState()
 {
-  // pulse animation
-  analogWrite(pulse_pin, brightness / 10);
-  // audio feedback
-  tone(speaker_pin, 20 * brightness);
-  refreshBrightness();
-  key_p->refresh();
-  if (key_p->is_clicked()) {
-    // state up
     switch (state) {
-      case waiting:
-        state = rolling;
-        break;
       case rolling:
         state = done;
         break;
       case done:
-        state = waiting;
+        state = rolling;
         break;
     }
+}
+
+void DigiDice::iterate()
+{
+  speaker_p->iterate();
+  pulse_p->iterate();
+  key_p->iterate();
+  if (key_p->is_clicked()) {
+    advanceState();
   }
   refreshFace();
-  seg_p->refresh(); // make the dice value visible
+  seg_p->iterate(); // make the dice value visible
 }
 
 // --- keep the arduino framework plating at a logical minimum
@@ -118,6 +101,6 @@ void setup() {
 void loop() {
   // refresh comes at some 100 Hz
   delayMicroseconds(10000);
-  dice_p->refresh();
+  dice_p->iterate();
 }
 

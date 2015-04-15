@@ -5,7 +5,7 @@ class Key {
   public:
     Key(int pin);
     // no destructor
-    void refresh();
+    void iterate();
     bool is_pressed();
     bool is_clicked();
     

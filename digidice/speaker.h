@@ -9,7 +9,10 @@ class Speaker {
   private:
   int pin;
   int freq;
-  int i;
+  int duration;
+  int key;
+  
+  static const unsigned int tones[];
 };
 #endif
 

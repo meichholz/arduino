@@ -1,15 +1,23 @@
+const unsigned int Speaker::tones[] = {
+#include "speaker_tones.h"
+0 };
+
 Speaker::Speaker(int pin)
 {
   this->pin = pin;
-  freq = 110;
-  i = 1;
+  key = 0;
+  duration = 0;
 }
 
 void Speaker::iterate()
 {
-    tone(pin, freq*i);
-    i++;
-    if (i>=100) i=1;
+   duration--;
+   if (duration <= 0) {
+     duration = 5;
+      tone(pin, Speaker::tones[key]);
+      key++;
+      if (Speaker::tones[key]==0) key=0;
+   }
 }
 
 

@@ -39,7 +39,7 @@ DigiDice::DigiDice(int speaker_pin, int pulse_pin, int key_pin)
   state = rolling;  
   face = 1;
   next_tick = 0;
-  speaker_p->play(0);
+  speaker_p->play(Speaker::greeter);
 }
 
 void DigiDice::refreshFace()
@@ -67,11 +67,11 @@ void DigiDice::advanceState()
     switch (state) {
       case rolling:
         state = done;
-        speaker_p->play(1);
+        speaker_p->play(Speaker::ok_chord);
         break;
       case done:
         state = rolling;
-        speaker_p->play(2);
+        speaker_p->play(Speaker::rolling);
         break;
     }
 }

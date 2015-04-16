@@ -5,6 +5,10 @@ Sketches, library code  and glue stuff for Arduino deployment
 
 For now, I use an Arduino Uni clone, and the original Arduino 1.6.3 tool.
 
+## Current Project: digidice
+
+It is a digital dice with 7 segment display, key, and a speaker. Simple and fun.
+
 ## Usage with Gentoo
 
 The Arduino ebuild in portage is fairly outdated and - worse - crashes.

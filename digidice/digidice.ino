@@ -8,7 +8,6 @@ class DigiDice {
 
   public:
     DigiDice(int speaker_pin, int pulse_pin, int key_pin);
-    void setup();
     void iterate();
 
     // no destructor
@@ -40,13 +39,8 @@ DigiDice::DigiDice(int speaker_pin, int pulse_pin, int key_pin)
   state = rolling;  
   face = 1;
   next_tick = 0;
-  this->setup();
+  speaker_p->play(0);
 }
-
-void DigiDice::setup()
-{
-}
-
 
 void DigiDice::refreshFace()
 {
@@ -73,9 +67,11 @@ void DigiDice::advanceState()
     switch (state) {
       case rolling:
         state = done;
+        speaker_p->play(1);
         break;
       case done:
         state = rolling;
+        speaker_p->play(2);
         break;
     }
 }

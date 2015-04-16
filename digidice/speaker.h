@@ -3,20 +3,22 @@
 class Speaker {
   public:
 
-  enum opcode {
-    end_of_tune = 1, transpose, jump_to
+  enum Opcode {
+    OpEndOfTune = 1,
+    OpTranspose,
+    OpJumpTo
   };
   
-  enum melody_id {
-    ok_chord=0,
-    er_chord=1,
-    rolling=2,
-    greeter=3,
+  enum TMelody {
+    MelodyChordOk=0,
+    MelodyChordError=1,
+    MelodyRolling=2,
+    MelodyGreeter=3,
   };
     
      
   Speaker(int pin);
-  void  play(melody_id tune);
+  void  play(TMelody tune);
   void iterate();
 
   private:

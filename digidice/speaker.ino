@@ -6,42 +6,54 @@ const unsigned int Speaker::tones[] = {
 
 #define NULL_MELODY  ((signed const char *)0)
 
-#define OPCODE(a)  (signed char)(-Speaker::a)
+#define OPCODE(a)  (signed char)(-Speaker::Op##a)
 
 static signed const char ops_ok_chord[] = {
-  OPCODE(transpose),  24,
+  OPCODE(Transpose),  24,
   0,5,
   4,5,
   7,5,
   12,15,
-  OPCODE(end_of_tune),-1
+  OPCODE(EndOfTune),-1
 }; 
 
 static signed const char ops_err_chord[] = {
-  OPCODE(transpose),  12,
+  OPCODE(Transpose),  12,
   12,5,
   7,5,
   3,5,
   0,15,
-  OPCODE(end_of_tune),-1
+  OPCODE(EndOfTune),-1
 }; 
 
 static signed const char ops_rolling[] = {
-  OPCODE(transpose),  24,
+  OPCODE(Transpose),  0,
   0,5,
   4,5,
   7,5,
   12,5,
   7,5,
-  4,5,
-  OPCODE(jump_to), 0,
+  3,5,
+  OPCODE(JumpTo), 0,
+}; 
+
+static signed const char ops_greeter[] = {
+  OPCODE(Transpose),  48,
+  0,15,
+  4,15,
+  7,15,
+  12,15,
+  7,15,
+  4,15,
+  0,15,
+  OPCODE(EndOfTune),-1
 }; 
 
 const signed char * Speaker::melodies[] = {
   ops_ok_chord,
   ops_err_chord,
   ops_rolling,
-  ops_err_chord, // greeter
+  ops_greeter, // greeter
   NULL_MELODY
 };
   
@@ -55,7 +67,7 @@ Speaker::Speaker(int pin)
   silenced = true;
 }
 
-void Speaker::play(melody_id tune)
+void Speaker::play(TMelody tune)
 {
   silenced = true;
   duration=0;
@@ -73,13 +85,13 @@ void Speaker::iterate()
      signed char opcode = melody[next_note++];
      signed char arg = melody[next_note++];
      if (opcode < 0) {
-       if (opcode == -end_of_tune) {
+       if (opcode == -OpEndOfTune) {
            silenced = true;
            melody = NULL_MELODY;
            noTone(pin);
-       } else if (opcode == -transpose) {
+       } else if (opcode == -OpTranspose) {
            key_offset = arg;
-       } else if (opcode == -jump_to) {
+       } else if (opcode == -OpJumpTo) {
            next_note = (unsigned char)arg;
        }
      } else {

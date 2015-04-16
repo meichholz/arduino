@@ -3,6 +3,8 @@
 #include "speaker.h"
 #include "pulse.h"
 
+#define TICKS_FOR_ROLLING  3
+
 
 class DigiDice {
 
@@ -23,7 +25,8 @@ class DigiDice {
     class Speaker *speaker_p;
     class Pulse *pulse_p;
 
-    enum { rolling, done } state;
+    enum State { StateRolling, StateDone };
+    enum State state;
 
     int next_tick;
     int face;
@@ -36,19 +39,19 @@ DigiDice::DigiDice(int speaker_pin, int pulse_pin, int key_pin)
   key_p = new Key(key_pin);
   speaker_p = new Speaker(speaker_pin);
   pulse_p = new Pulse(pulse_pin);
-  state = rolling;  
+  state = StateRolling;  
   face = 1;
   next_tick = 0;
-  speaker_p->play(Speaker::greeter);
+  speaker_p->play(Speaker::MelodyGreeter);
 }
 
 void DigiDice::refreshFace()
 {
   switch (state) {
-    case done:
+    case StateDone:
       seg_p->setNumber(face);
       break;
-    case rolling:
+    case StateRolling:
       // roll the dice, or just wait...
       next_tick--;
       if (next_tick <= 0) {
@@ -56,7 +59,7 @@ void DigiDice::refreshFace()
         if (++face > 6) {
           face = 1;
         }
-        next_tick = 4;
+        next_tick = TICKS_FOR_ROLLING;
       }
       break;
   }
@@ -65,13 +68,13 @@ void DigiDice::refreshFace()
 void DigiDice::advanceState()
 {
     switch (state) {
-      case rolling:
-        state = done;
-        speaker_p->play(Speaker::ok_chord);
+      case StateRolling:
+        state = StateDone;
+        speaker_p->play(Speaker::MelodyChordOk);
         break;
-      case done:
-        state = rolling;
-        speaker_p->play(Speaker::rolling);
+      case StateDone:
+        state = StateRolling;
+        speaker_p->play(Speaker::MelodyRolling);
         break;
     }
 }

@@ -3,7 +3,7 @@
 #include "speaker.h"
 #include "pulse.h"
 
-#define TICKS_FOR_ROLLING  3
+#define TICKS_FOR_ROLLING  1
 
 
 class DigiDice {
@@ -49,13 +49,13 @@ void DigiDice::refreshFace()
 {
   switch (state) {
     case StateDone:
-      seg_p->setNumber(face);
+        seg_p->setChar(face, SevenSeg::CsDiceFacing);
       break;
     case StateRolling:
       // roll the dice, or just wait...
       next_tick--;
       if (next_tick <= 0) {
-        seg_p->setNumber(face);
+        seg_p->setChar(face, SevenSeg::CsDiceFacing);
         if (++face > 6) {
           face = 1;
         }

@@ -12,6 +12,13 @@
 //   6
 //  0 2
 //   1   (7)
+
+// wiring for the dice face is straight:
+
+// 3     2
+// 5  0  6
+// 1     4
+
 const int SevenSeg::segment_pins[] = {
   2, 3, 4, 6, 7, 8, 9,
   -1,

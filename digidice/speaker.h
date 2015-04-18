@@ -14,6 +14,7 @@ class Speaker {
     MelodyChordError=1,
     MelodyRolling=2,
     MelodyGreeter=3,
+    MelodyCooling=4,
   };
     
      

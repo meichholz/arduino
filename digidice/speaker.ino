@@ -27,7 +27,7 @@ static signed const char ops_err_chord[] = {
 }; 
 
 static signed const char ops_rolling[] = {
-  OPCODE(Transpose),  0,
+  OPCODE(Transpose),  1,
   0,5,
   4,5,
   7,5,
@@ -47,13 +47,28 @@ static signed const char ops_greeter[] = {
   4,15,
   0,15,
   OPCODE(EndOfTune),-1
-}; 
+};
+
+static signed const char ops_cooling[] = {
+  OPCODE(Transpose),  48,
+  12, 35,
+  7, 40,
+  4, 45,
+  OPCODE(Transpose),  36,
+  12, 50,
+  7, 60,
+  4, 80,
+  OPCODE(Transpose),  24,
+  12, 120,
+  OPCODE(EndOfTune),-1
+};
 
 const signed char * Speaker::melodies[] = {
   ops_ok_chord,
   ops_err_chord,
   ops_rolling,
-  ops_greeter, // greeter
+  ops_greeter, // greeter melody
+  ops_cooling,
   NULL_MELODY
 };
   

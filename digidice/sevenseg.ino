@@ -105,11 +105,11 @@ const unsigned char *SevenSeg::generators[] = {
     (unsigned char *)0
 };
 
-SevenSeg::SevenSeg()
+SevenSeg::SevenSeg() :
+  active_bits(0),
+  current_step(0),
+  animation(CsSmallWheel)
 {
-  active_bits = 0;
-  current_step = 0;
-  animation = CsSmallWheel;
   for (int i = 0; segment_pins[i] > 0; i++) {
     pinMode(SevenSeg::segment_pins[i], OUTPUT);
     digitalWrite(SevenSeg::segment_pins[i], LOW);

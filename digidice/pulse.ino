@@ -1,7 +1,7 @@
-Pulse::Pulse(int pin)
+Pulse::Pulse(int pin) :
+  pin(pin),
+  brightness(0)
 {
-  this->pin = pin;
-  brightness = 0;
   pinMode(pin, OUTPUT);
 }
 

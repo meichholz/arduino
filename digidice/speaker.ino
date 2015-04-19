@@ -73,13 +73,13 @@ const signed char * Speaker::melodies[] = {
 };
   
 
-Speaker::Speaker(int pin)
+Speaker::Speaker(int pin) :
+  pin(pin),
+  duration(0),
+  melody(NULL_MELODY),
+  next_note(0),
+  silenced(true)
 {
-  this->pin = pin;
-  duration = 0;
-  melody = NULL_MELODY;
-  next_note = 0;
-  silenced = true;
 }
 
 void Speaker::play(TMelody tune)

@@ -1,20 +1,22 @@
 #ifndef _H_SPEAKER
 #define _H_SPEAKER
+
 class Speaker {
   public:
 
   enum Opcode {
-    OpEndOfTune = 1,
+    OpFirstNote,
+    OpEndOfTune,
     OpTranspose,
-    OpJumpTo
+    OpJumpTo,
   };
   
   enum TMelody {
-    MelodyChordOk=0,
-    MelodyChordError=1,
-    MelodyRolling=2,
-    MelodyGreeter=3,
-    MelodyCooling=4,
+    MelodyChordOk,
+    MelodyChordError,
+    MelodyRolling,
+    MelodyGreeter,
+    MelodyCooling,
   };
     
      

@@ -4,7 +4,13 @@
 class SevenSeg {
   public:
 
-    enum TCharset { CsDigits=0, CsInverseEight, CsEight, CsSmallWheel, CsDiceFacing };
+    enum TCharset {
+      CsDigits,
+      CsInverseEight,
+      CsEight,
+      CsSmallWheel,
+      CsDiceFacing,
+    };
     
     static const int segment_pins[];  // map from logical segments to real pins
     static const unsigned char *generators[]; // character generator for wheel animation

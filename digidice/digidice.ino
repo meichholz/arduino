@@ -5,7 +5,6 @@
 
 #define TICKS_FOR_ROLLING  1
 
-
 class DigiDice {
 
   public:
@@ -21,13 +20,12 @@ class DigiDice {
     void advanceState();
     void rollDice();
 
-    class SevenSeg *seg_p;
-    class Key *key_p;
-    class Speaker *speaker_p;
-    class Pulse *pulse_p;
+    SevenSeg *seg_p;
+    Key *key_p;
+    Speaker *speaker_p;
+    Pulse *pulse_p;
 
-    enum State { StateRolling, StateCooling, StateDone };
-    enum State state;
+    enum State { StateRolling, StateCooling, StateDone } state;
 
     int next_tick;
     int face;

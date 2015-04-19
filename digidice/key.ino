@@ -1,11 +1,11 @@
 #include "key.h"
 
-Key::Key(int pin) {
-  this->pin = pin;
-  debounce_ticks = 0;
-  debounced_state = false;
-  last_state = false;
-  clicked = false;
+Key::Key(int pin) :
+  pin(pin),
+  debounce_ticks(0),
+  clicked(false),
+  last_state(false)
+{
   pinMode(pin, INPUT);
 }
 

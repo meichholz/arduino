@@ -1,0 +1,41 @@
+##############################################################
+
+# note: since arduio 1.5 we need a vendor/arch layout (this: hardware/bb/avr)
+# note: to use "arduino" tools and libraries, we need "VENDOR_ID:CORE_ID"
+# references whenever possible.
+
+# see: https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5---3rd-party-Hardware-specification#referencing-another-core-variant-or-tool
+# see: https://groups.google.com/a/arduino.cc/forum/?fromgroups#!topic/developers/f5TGhrh8cKU
+# see: https://groups.google.com/a/arduino.cc/forum/#!topic/developers/Uy7ecdkIa1M
+
+atmbb.name=ATmega328 breadboard 8 MHz
+
+#atmbb.vid.0=0x2341
+#atmbb.pid.0=0x0043
+#atmbb.vid.1=0x2341
+#atmbb.pid.1=0x0001
+#atmbb.vid.2=0x2A03
+#atmbb.pid.2=0x0043
+
+#atmbb.vid.0x2A03.warning=Uncertified
+
+atmbb.upload.tool=arduino:avrdude
+atmbb.upload.protocol=arduino
+atmbb.upload.maximum_size=32256
+atmbb.upload.maximum_data_size=2048
+atmbb.upload.speed=57600
+
+atmbb.bootloader.tool=avrdude
+atmbb.bootloader.low_fuses=0xE2
+atmbb.bootloader.high_fuses=0xDA
+atmbb.bootloader.extended_fuses=0x05
+atmbb.bootloader.unlock_bits=0x3F
+atmbb.bootloader.lock_bits=0x0F
+atmbb.bootloader.file=optiboot/optiboot_atmega328.hex
+
+atmbb.build.mcu=atmega328p
+atmbb.build.f_cpu=8000000L
+atmbb.build.board=AVR_UNO
+atmbb.build.core=arduino:arduino
+atmbb.build.variant=arduino:standard
+

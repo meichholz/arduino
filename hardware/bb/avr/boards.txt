@@ -19,19 +19,22 @@ atmbb.name=ATmega328 breadboard 8 MHz
 
 #atmbb.vid.0x2A03.warning=Uncertified
 
+atmbb.variant=arduino:standard
+atmbb.core=arduino:arduino
+
 atmbb.upload.tool=arduino:avrdude
-atmbb.upload.protocol=arduino
+atmbb.upload.protocol=arduino:arduino
 atmbb.upload.maximum_size=32256
 atmbb.upload.maximum_data_size=2048
-atmbb.upload.speed=57600
+atmbb.upload.speed=19200
 
-atmbb.bootloader.tool=avrdude
+atmbb.bootloader.tool=arduino:avrdude
 atmbb.bootloader.low_fuses=0xE2
 atmbb.bootloader.high_fuses=0xDA
 atmbb.bootloader.extended_fuses=0x05
 atmbb.bootloader.unlock_bits=0x3F
 atmbb.bootloader.lock_bits=0x0F
-atmbb.bootloader.file=optiboot/optiboot_atmega328.hex
+atmbb.bootloader.file=optiboot_atmega328.hex
 
 atmbb.build.mcu=atmega328p
 atmbb.build.f_cpu=8000000L

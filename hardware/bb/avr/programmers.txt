@@ -1,0 +1,14 @@
+diamexusb.name=Diamex AVR
+diamexusb.communication=serial
+diamexusb.protocol=stk500v2
+diamexusb.program.protocol=stk500v2
+diamexusb.program.tool=avrdude
+diamexusb.speed=57600
+diamexusb.program.speed=57600
+diamexusb.program.extra_params=-P{serial.port} -b{program.speed}
+# diamexusb.program.params.quiet=-q -q
+
+# arduinoasisp.protocol=stk500v1
+# arduinoasisp.speed=19200
+# arduinoasisp.program.protocol=stk500v1
+# arduinoasisp.program.speed=19200

@@ -3,6 +3,26 @@
 #include "speaker.h"
 #include "pulse.h"
 
+/***
+= Summary
+
+Digital dice with some bells and whistles.
+- roll out animation
+- pulsing power LED
+- chords on speaker for signaling
+- roll start button
+
+=Pinout
+
+- D12 : speaker
+- D11 : input button (LOW-active, pullup required)
+- D2 : dice a(1)
+- D3, D4 : dice b,c (2)
+- D5 : Power LED
+- D6, D7 : dice d,e (4)
+- D8, D9 : dice f,g (6)
+
+**/
 #define TICKS_FOR_ROLLING  1
 
 class DigiDice {

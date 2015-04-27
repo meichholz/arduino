@@ -1,0 +1,16 @@
+
+# this is pretty much an AVR MK2 but with USB TTY "serial" connection.
+# set jumper to 1=ON 2=ON to power the arduino by the programmer with 5V.
+# for program upload, we need (???) a copy(!) of platform.txt file.
+# vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+# note: *here* we CANNOT use "arduino:avrdude", it just does not wire
+# correctly ("program.params.quiet not defined").
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+diamexusb.name=Diamex AVR
+diamexusb.communication=serial
+diamexusb.protocol=stk500v2
+diamexusb.program.protocol=stk500v2
+diamexusb.program.extra_params=-P{serial.port}
+diamexusb.program.tool=avrdude
+

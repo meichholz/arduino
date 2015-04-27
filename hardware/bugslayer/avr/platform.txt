@@ -1,11 +1,9 @@
-
-# Arduino AVR Core and platform.
-# ------------------------------
-
 # For more info:
 # https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5---3rd-party-Hardware-specification
 
-name=Arduino AVR Boards
+# How can we get rid of this file?
+
+name=Bugslayer AVR Boards
 version=1.6.3
 
 # AVR compile variables

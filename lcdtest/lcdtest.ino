@@ -1,6 +1,7 @@
 class Lcd {
   public:
     Lcd();
+    enum class zahl { eins,zwei,drei } x;
   private:
     void setup();
     void writeNibble(unsigned char nibble);
@@ -9,7 +10,10 @@ class Lcd {
     char  m_pin_e;
     char  m_pin_rs;
     char  m_pin_d_base;
+    
 };
+
+static Lcd::zahl y = Lcd::zahl::eins;
 
 Lcd::Lcd() :
   m_pin_e(11),

@@ -47,3 +47,85 @@ atmbb.bootloader.extended_fuses=0x05
 atmbb.bootloader.unlock_bits=0x3F
 atmbb.bootloader.lock_bits=0x0F
 
+# OK, this definition is a nearly verbatim copy of the "uno", but we need
+# this to be able to use C++ 11, so deal with it.
+
+atmuno.name=ATmega328 on UNO for C++11
+
+# these are various USB ID of the USB interface, needed when and where?
+#atmuno.vid.0=0x2341
+#atmuno.pid.0=0x0043
+#atmuno.vid.1=0x2341
+#atmuno.pid.1=0x0001
+#atmuno.vid.2=0x2A03
+#atmuno.pid.2=0x0043
+#atmuno.vid.0x2A03.warning=Uncertified
+
+# have an own board symbol
+atmuno.build.board=AVR_UNO_C11
+
+# provide for internal clock and frequency
+atmuno.build.f_cpu=16000000L
+atmuno.build.mcu=atmega328p
+
+# engineer standard bootloader into this
+atmuno.bootloader.path=arduino:avr:optiboot
+atmuno.bootloader.file=optiboot_atmega328.hex
+
+# all other settings are pretty much standard from the UNO board
+atmuno.variant=arduino:standard
+atmuno.core=arduino:arduino
+atmuno.build.core=arduino:arduino
+atmuno.build.variant=arduino:standard
+atmuno.upload.tool=arduino:avrdude
+atmuno.upload.protocol=arduino
+atmuno.upload.maximum_size=32256
+atmuno.upload.maximum_data_size=2048
+atmuno.upload.speed=57600
+atmuno.bootloader.tool=arduino:avrdude
+atmuno.bootloader.low_fuses=0xFF
+atmuno.bootloader.high_fuses=0xDE
+atmuno.bootloader.extended_fuses=0x05
+atmuno.bootloader.unlock_bits=0x3F
+atmuno.bootloader.lock_bits=0x0F
+
+atmesp.name=Arduino Esplora C++11
+atmesp.vid.0=0x2341
+atmesp.pid.0=0x003C
+atmesp.vid.1=0x2341
+atmesp.pid.1=0x803C
+atmesp.vid.2=0x2A03
+atmesp.pid.2=0x003C
+atmesp.vid.3=0x2A03
+atmesp.pid.3=0x803C
+
+atmesp.vid.0x2A03.warning=Uncertified
+
+
+atmesp.upload.tool=avrdude
+atmesp.upload.protocol=avr109
+atmesp.upload.maximum_size=28672
+atmesp.upload.maximum_data_size=2560
+atmesp.upload.speed=57600
+atmesp.upload.disable_flushing=true
+atmesp.upload.use_1200bps_touch=true
+atmesp.upload.wait_for_upload_port=true
+
+atmesp.bootloader.tool=avrdude
+atmesp.bootloader.low_fuses=0xff
+atmesp.bootloader.high_fuses=0xd8
+atmesp.bootloader.extended_fuses=0xcb
+atmesp.bootloader.file=caterina/Caterina-Esplora.hex
+atmesp.bootloader.unlock_bits=0x3F
+atmesp.bootloader.lock_bits=0x2F
+
+atmesp.build.mcu=atmega32u4
+atmesp.build.f_cpu=16000000L
+atmesp.build.vid=0x2341
+atmesp.build.pid=0x803c
+atmesp.build.usb_product="Arduino Esplora"
+atmuno.build.board=AVR_ESPLORA_C11
+atmesp.build.core=arduino
+atmesp.build.variant=leonardo
+atmesp.build.extra_flags={build.usb_flags}
+

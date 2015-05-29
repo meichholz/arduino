@@ -4,7 +4,7 @@
 # How can we get rid of this file?
 
 name=Bugslayer AVR Boards
-version=1.6.3
+version=1.6.4
 
 # AVR compile variables
 # --------------------- 

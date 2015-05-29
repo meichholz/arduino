@@ -20,7 +20,7 @@ atmbb.name=ATmega328 on UNO at 8 MHz
 #atmbb.vid.0x2A03.warning=Uncertified
 
 # have an own board symbol
-atmbb.build.board=AVR_UNO_BB
+atmbb.build.board=AVR_BB
 
 # provide for internal clock and frequency
 atmbb.bootloader.low_fuses=0xE2
@@ -47,6 +47,8 @@ atmbb.bootloader.extended_fuses=0x05
 atmbb.bootloader.unlock_bits=0x3F
 atmbb.bootloader.lock_bits=0x0F
 
+# --------------------------------------
+
 # OK, this definition is a nearly verbatim copy of the "uno", but we need
 # this to be able to use C++ 11, so deal with it.
 
@@ -62,7 +64,7 @@ atmuno.name=ATmega328 on UNO for C++11
 #atmuno.vid.0x2A03.warning=Uncertified
 
 # have an own board symbol
-atmuno.build.board=AVR_UNO_C11
+atmuno.build.board=AVR_UNO
 
 # provide for internal clock and frequency
 atmuno.build.f_cpu=16000000L
@@ -89,6 +91,8 @@ atmuno.bootloader.extended_fuses=0x05
 atmuno.bootloader.unlock_bits=0x3F
 atmuno.bootloader.lock_bits=0x0F
 
+# -----------------
+
 atmesp.name=Arduino Esplora C++11
 atmesp.vid.0=0x2341
 atmesp.pid.0=0x003C
@@ -101,8 +105,7 @@ atmesp.pid.3=0x803C
 
 atmesp.vid.0x2A03.warning=Uncertified
 
-
-atmesp.upload.tool=avrdude
+atmesp.upload.tool=arduino:avrdude
 atmesp.upload.protocol=avr109
 atmesp.upload.maximum_size=28672
 atmesp.upload.maximum_data_size=2560
@@ -111,11 +114,12 @@ atmesp.upload.disable_flushing=true
 atmesp.upload.use_1200bps_touch=true
 atmesp.upload.wait_for_upload_port=true
 
-atmesp.bootloader.tool=avrdude
+atmesp.bootloader.tool=arduino:avrdude
 atmesp.bootloader.low_fuses=0xff
 atmesp.bootloader.high_fuses=0xd8
 atmesp.bootloader.extended_fuses=0xcb
-atmesp.bootloader.file=caterina/Caterina-Esplora.hex
+atmuno.bootloader.path=arduino:avr:caterina
+atmesp.bootloader.file=Caterina-Esplora.hex
 atmesp.bootloader.unlock_bits=0x3F
 atmesp.bootloader.lock_bits=0x2F
 
@@ -124,8 +128,8 @@ atmesp.build.f_cpu=16000000L
 atmesp.build.vid=0x2341
 atmesp.build.pid=0x803c
 atmesp.build.usb_product="Arduino Esplora"
-atmuno.build.board=AVR_ESPLORA_C11
-atmesp.build.core=arduino
-atmesp.build.variant=leonardo
+atmesp.build.board=AVR_ESPLORA
+atmesp.build.core=arduino:arduino
+atmesp.build.variant=arduino:leonardo
 atmesp.build.extra_flags={build.usb_flags}
 

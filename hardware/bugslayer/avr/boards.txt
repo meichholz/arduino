@@ -63,33 +63,27 @@ atmuno.name=ATmega328 on UNO for C++11
 #atmuno.pid.2=0x0043
 #atmuno.vid.0x2A03.warning=Uncertified
 
-# have an own board symbol
-atmuno.build.board=AVR_UNO
-
-# provide for internal clock and frequency
-atmuno.build.f_cpu=16000000L
-atmuno.build.mcu=atmega328p
-
-# engineer standard bootloader into this
-atmuno.bootloader.path=arduino:avr:optiboot
-atmuno.bootloader.file=optiboot_atmega328.hex
-
 # all other settings are pretty much standard from the UNO board
 atmuno.variant=arduino:standard
 atmuno.core=arduino:arduino
+atmuno.build.board=AVR_UNO
+atmuno.build.f_cpu=16000000L
+atmuno.build.mcu=atmega328p
 atmuno.build.core=arduino:arduino
 atmuno.build.variant=arduino:standard
 atmuno.upload.tool=arduino:avrdude
 atmuno.upload.protocol=arduino
 atmuno.upload.maximum_size=32256
 atmuno.upload.maximum_data_size=2048
-atmuno.upload.speed=57600
+atmuno.upload.speed=115200
 atmuno.bootloader.tool=arduino:avrdude
 atmuno.bootloader.low_fuses=0xFF
 atmuno.bootloader.high_fuses=0xDE
 atmuno.bootloader.extended_fuses=0x05
 atmuno.bootloader.unlock_bits=0x3F
 atmuno.bootloader.lock_bits=0x0F
+atmuno.bootloader.path=arduino:avr:optiboot
+atmuno.bootloader.file=optiboot_atmega328.hex
 
 # -----------------
 

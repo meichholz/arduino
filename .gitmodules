@@ -1,0 +1,6 @@
+[submodule "local/devsupport"]
+	path = local/devsupport
+	url = https://github.com/meichholz/devsupport.git
+[submodule "local/3rdparty"]
+	path = local/3rdparty
+	url = ssh://marian@giles.bugslayer.de/srv/git/projects/googletest

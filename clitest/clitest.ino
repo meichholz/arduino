@@ -20,25 +20,39 @@ Logger::Logger() {
 
 class Cli {
   private:
-    char inputbuffer[100];
-    bool ready;
-    int nextkey_i;
+    char m_inputbuffer[100];
+    bool m_ready;
+    int  m_nextkey_i;
+    class Logger *m_logger_p;
 
   public:
 
   Cli();
+  void setLogger(class Logger *logger);
   int getNumber();
+  void setup();
   void refresh();
-  bool is_available() { return ready; }
+  bool is_available() { return m_ready; }
   virtual ~Cli() {};
   
 };
 
+void Cli::setLogger(class Logger *logger)
+{
+  m_logger_p = logger;
+}
+
 Cli::Cli()
 {
-  ready = false;
-  nextkey_i = 0;
-  inputbuffer[0] = '\0';
+  m_ready = false;
+  m_nextkey_i = 0;
+  m_inputbuffer[0] = '\0';
+}
+
+void Cli::setup()
+{
+  m_logger_p->debug("setting up serial");
+  m_logger_p->debug("Enter percentage for blink ratio");
 }
 
 void Cli::refresh() {
@@ -46,16 +60,16 @@ void Cli::refresh() {
   while (Serial.available()) {
     char ch = Serial.read();
     modified = true;
-    if (ch=='\r') {
-      ready = true;
-    } else if (nextkey_i < sizeof(inputbuffer)-1) {
-      inputbuffer[nextkey_i++] = ch;
-      inputbuffer[nextkey_i] = '\0';
+    if (ch == '\r') {
+      m_ready = true;
+    } else if (m_nextkey_i < sizeof(m_inputbuffer)-1) {
+      m_inputbuffer[m_nextkey_i++] = ch;
+      m_inputbuffer[m_nextkey_i] = '\0';
     }
   }
   if (modified) {
-    Serial.print("Got so far:");
-    Serial.println(inputbuffer);
+    m_logger_p->debug("Got so far:");
+    m_logger_p->debug(m_inputbuffer);
   }
 }
 
@@ -63,8 +77,8 @@ int Cli::getNumber()
 {
   int i = 0;
   int n = 0;
-  while (i<sizeof(inputbuffer)-1) {
-    int ch = inputbuffer[i];
+  while (i<sizeof(m_inputbuffer)-1) {
+    int ch = m_inputbuffer[i];
     if (ch>='0' && ch<='9') {
        n = 10*n + ch-'0';
        i++;
@@ -72,9 +86,9 @@ int Cli::getNumber()
     else
       break;
   }
-  nextkey_i = 0;
-  ready = false;
-  if (inputbuffer[i]=='\0') {
+  m_nextkey_i = 0;
+  m_ready = false;
+  if (m_inputbuffer[i]=='\0') {
     char buffer[50];
     sprintf(buffer,"New INT value: %d",n);
     Serial.println(buffer);
@@ -92,9 +106,9 @@ const int n_led = 13;
 void setup() {
   Serial.begin(9600);
   logger = new Logger;
-  cli = new Cli;
-  logger->debug("setting up serial");
-  logger->debug("Enter percentage for blink ratio");
+  cli = new Cli; // this setup is CRAP
+  cli->setLogger(logger);
+  cli->setup();
   pinMode(n_led, OUTPUT);
 }
 

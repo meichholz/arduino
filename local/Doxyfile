@@ -1,0 +1,5 @@
+PROJECT_NAME  = Arduino-Support
+@INCLUDE      = devsupport/etc/doxyfile_c_legacy
+MACRO_EXPANSION = YES
+
+

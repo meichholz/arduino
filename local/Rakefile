@@ -1,0 +1,29 @@
+load "devsupport/tasks/setup.rb"
+
+ds_configure do |c|
+  c.debug_configure_options = ""
+  c.configure_options = [
+                         '--sysconfdir=/etc',
+                         '--with-gtest', '--with-gmock',
+                         '--without-gperftools',
+                         '--with-cpputest',
+                         # '--enable-check-failures',
+                         ].join(' ')
+  # c.ci_suite_argument = "--gtest-options=xml:#{ds_env.build_dir}/tests/unit/reports/"
+  c.ci_suite_arguments = "-ojunit"
+  c.gcovr_exclude = '(^(3rdparty|gtest)|(.*(CppUTest|UtestPlatform).*))'
+  c.run_arguments = '-V'
+  c.make_options = "--silent"
+end
+
+# CLEAN.include 'tests/*.o', 'tests/stamp-h1', 'src/*.o', 'tests/*.log'
+
+ds_tasks_for :cauto
+ds_tasks_for :devlibs
+ds_conclude
+
+task :bootstrap => [ 'build:devlibs']
+
+task :default => :check
+
+

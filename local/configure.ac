@@ -4,7 +4,7 @@ dnl >>> run "autoreconf --install" to process this
 AC_PREREQ([2.69])
 AC_INIT([sketchsupport], [0.1], [marian@bugslayer.de])
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_SRCDIR([src/dummy.cc])
+AC_CONFIG_SRCDIR([src/cli.cc])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([foreign 1.9.6])

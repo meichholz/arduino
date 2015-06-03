@@ -1,6 +1,6 @@
 {
 	"*": {"make": ["rake", "-f", "{project}/Rakefile"]},
-	"src/*.c": {"type": "code",
+	"src/*.cc": {"type": "code",
 		"alternate": "src/{}.h" },
 	"src/*.h": {"type": "header",
 		"alternate": "src/{}.c"},

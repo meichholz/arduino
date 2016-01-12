@@ -1,24 +1,33 @@
+// home made bitbang LCD 1602 interface, 4bit mode
+// just for fun, from the spec 2015
+// 
+// Arduino -> Shield
+// D2..D5 -> D4..D7
+// D11 -> E
+// D12 -> RS
+// GND -> RW, K, VSS
+// 5V -> A, VDD
+// Poti -> V0
+
+
 class Lcd {
   public:
-    Lcd();
-    enum class zahl { eins,zwei,drei } x;
+    Lcd(char pin_d4, char pin_e, char pin_rs);
+    void print(const char *pch);
   private:
     void setup();
     void writeNibble(unsigned char nibble);
     void writeByte(unsigned char byte_ch);
-    void print(const char *pch);
     char  m_pin_e;
     char  m_pin_rs;
     char  m_pin_d_base;
     
 };
 
-static Lcd::zahl y = Lcd::zahl::eins;
-
-Lcd::Lcd() :
-  m_pin_e(11),
-  m_pin_rs(12),
-  m_pin_d_base(2)
+Lcd::Lcd(char pin_d4, char pin_e, char pin_rs) :
+  m_pin_e(pin_e),
+  m_pin_rs(pin_rs),
+  m_pin_d_base(pin_d4)
 {
   setup();
 }
@@ -74,7 +83,6 @@ void Lcd::setup()
   delay(3);
   writeByte(0x02); // home
   delay(3);
-  print("Booya!");
 }
 
 class App {
@@ -87,7 +95,8 @@ class App {
 
 App::App()
 {
-  m_display = new Lcd;
+  m_display = new Lcd(2, 11, 12);
+  m_display->print("Booyiaey!");
 }
 
 void App::iterate()

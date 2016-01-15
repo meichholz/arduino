@@ -12,6 +12,8 @@ const uint16_t Speaker::tones[] PROGMEM = {
 
 #define OPCODE(a)  (signed char)(-Speaker::Op##a)
 
+// all durations are based on 100 Hz control rate.
+
 static signed const char ops_ok_chord[] PROGMEM = {
   OPCODE(Transpose),  24,
   0,5,
@@ -77,12 +79,13 @@ const signed char *  const Speaker::melodies[] PROGMEM = {
 };
   
 
-Speaker::Speaker(int pin) :
+Speaker::Speaker(int pin, int poll_freq) :
   pin(pin),
   duration(0),
   melody(NULL_MELODY),
   next_note(0),
-  silenced(true)
+  silenced(true),
+  poll_freq(poll_freq)
 {
 }
 
@@ -96,29 +99,39 @@ void Speaker::play(TMelody tune)
   silenced = false;
 }
 
+void Speaker::nextNoteEvent()
+{
+  signed char opcode = pgm_read_byte_near(melody+(next_note++));
+  signed char arg = pgm_read_byte_near(melody+(next_note++));
+  if (opcode < 0) {
+    if (opcode == -OpEndOfTune) {
+        silenced = true;
+        melody = NULL_MELODY;
+        noTone(pin);
+    } else if (opcode == -OpTranspose) {
+        key_offset = arg;
+    } else if (opcode == -OpJumpTo) {
+        next_note = (unsigned char)arg;
+    }
+  } else {
+   uint16_t toneval = pgm_read_word_near(Speaker::tones + opcode + key_offset);
+   tone(pin, toneval);
+   duration = ((long)arg*poll_freq+50L)/100L;
+  } // note opcode
+}
+
 void Speaker::iterate()
 {
+  if (poll_freq>=1000L) {
+    delayMicroseconds((unsigned int)(1000000L/(long)poll_freq));
+  } else {
+    delay((unsigned int)(1000L/(long)poll_freq));
+  }
   if (silenced) return;
-   duration--;
-   if (duration <= 0 && melody!=NULL_MELODY) {
-     signed char opcode = pgm_read_byte_near(melody+(next_note++));
-     signed char arg = pgm_read_byte_near(melody+(next_note++));
-     if (opcode < 0) {
-       if (opcode == -OpEndOfTune) {
-           silenced = true;
-           melody = NULL_MELODY;
-           noTone(pin);
-       } else if (opcode == -OpTranspose) {
-           key_offset = arg;
-       } else if (opcode == -OpJumpTo) {
-           next_note = (unsigned char)arg;
-       }
-     } else {
-      uint16_t toneval = pgm_read_word_near(Speaker::tones + opcode + key_offset);
-      tone(pin, toneval);
-      duration = arg;
-     } // note opcode
-   }
+  duration--;
+  if (duration <= 0 && melody!=NULL_MELODY) {
+    nextNoteEvent();
+  }
 }
 
 

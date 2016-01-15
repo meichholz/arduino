@@ -20,18 +20,21 @@ class Speaker {
   };
     
      
-  Speaker(int pin);
+  Speaker(int pin, int loopfreq);
   void  play(TMelody tune);
   void iterate();
 
   private:
 
+  void nextNoteEvent();
+
   int pin;
-  signed char duration;
-  signed char key_offset;
+  int duration;
+  int next_note;
+  int poll_freq; // normally 100 (Hz)
   bool  silenced;
   signed const char *melody;
-  int next_note;
+  signed char key_offset;
   
   static const unsigned int tones[];
   static const signed char * const melodies[];

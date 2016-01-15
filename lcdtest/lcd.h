@@ -10,7 +10,8 @@ class Lcd {
     void print(const char *pch);
     void home();
     void clear();
-    void defineChar(int charnum, int n_byte, byte *bits);
+    void defineChar_P(int charnum, int c_bytes, const byte *bits);
+    void defineChar(int charnum, int c_bytes, const byte *bits);
     
   protected:
     // base interface

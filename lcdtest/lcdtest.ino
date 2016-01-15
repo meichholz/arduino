@@ -23,7 +23,7 @@ class App {
     Speaker * m_speaker;
 };
 
-static byte char_face1[] = {
+static const byte char_face1[] PROGMEM = {
   0b00000,
   0b11011,
   0b00000,
@@ -38,7 +38,7 @@ App::App()
 {
   m_display = new Lcd(2, 11, 12);
   m_speaker = new Speaker(13);
-  m_display->defineChar(1, 8, char_face1);
+  m_display->defineChar_P(1, 8, char_face1);
   m_display->home();
   m_display->print("\1\1\1 play \1\1\1");
   m_speaker->play(Speaker::MelodyGreeter);

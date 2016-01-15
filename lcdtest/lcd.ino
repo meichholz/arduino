@@ -23,7 +23,7 @@ void Lcd::print(const char *pch)
   digitalWrite(m_pin_rs, LOW);
 }
 
-void Lcd::defineChar(int charnum, int byte_c, byte *bits)
+void Lcd::defineChar(int charnum, int byte_c, const byte *bits)
 {
   int i;
   clearRS();
@@ -31,6 +31,17 @@ void Lcd::defineChar(int charnum, int byte_c, byte *bits)
   setRS();
   for (i=0; i<byte_c;  i++) {
     writeByte(bits[i]);
+  }
+  clearRS();
+}
+void Lcd::defineChar_P(int charnum, int byte_c, const byte *bits)
+{
+  int i;
+  clearRS();
+  writeByte(0x40+8*charnum);
+  setRS();
+  for (i=0; i<byte_c;  i++) {
+    writeByte(pgm_read_byte(bits+i));
   }
   clearRS();
 }

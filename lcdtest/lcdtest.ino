@@ -23,17 +23,29 @@ class App {
     Speaker * m_speaker;
 };
 
+static byte char_face1[] = {
+  0b00000,
+  0b11011,
+  0b00000,
+  0b00100,
+  0b00100,
+  0b10001,
+  0b01110,
+  0b00000,
+};
+
 App::App()
 {
   m_display = new Lcd(2, 11, 12);
   m_speaker = new Speaker(13);
-  m_display->print("play...");
+  m_display->defineChar(1, 8, char_face1);
+  m_display->home();
+  m_display->print("\1\1\1 play \1\1\1");
   m_speaker->play(Speaker::MelodyGreeter);
 }
 
 void App::iterate()
 {
-  delayMicroseconds(10000); // some 100 Hz sampling rate
   m_speaker->iterate();
   m_display->iterate();
 }
@@ -46,5 +58,6 @@ void setup() {
 
 void loop() {
   app_p->iterate();
+  delayMicroseconds(10000); // some 100 Hz sampling rate
 }
 

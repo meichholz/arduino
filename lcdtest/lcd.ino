@@ -3,7 +3,10 @@
 Lcd::Lcd(char pin_d4, char pin_e, char pin_rs) :
   m_pin_e(pin_e),
   m_pin_rs(pin_rs),
-  m_pin_d_base(pin_d4)
+  m_pin_d_base(pin_d4),
+  m_cursor_is_visible(false),
+  m_cursor_is_blinking(false),
+  m_display_is_visible(true)
 {
 }
 
@@ -19,13 +22,14 @@ void Lcd::print(const char *pch)
     writeByte(*pch);
     pch++;
   }
-  digitalWrite(m_pin_rs, LOW);
+  clearRS();
 }
 
 void Lcd::defineChar(int charnum, int byte_c, const byte *bits)
 {
   int i;
   clearRS();
+  writeByte(0x06); // address counter INCrement
   writeByte(0x40+8*charnum);
   setRS();
   for (i=0; i<byte_c;  i++) {
@@ -37,6 +41,7 @@ void Lcd::defineChar_P(int charnum, int byte_c, const byte *bits)
 {
   int i;
   clearRS();
+  writeByte(0x06); // address counter INCrement
   writeByte(0x40+8*charnum);
   setRS();
   for (i=0; i<byte_c;  i++) {
@@ -71,10 +76,9 @@ void Lcd::home()
   wait();
 }
 
-// log wait for a command
-void Lcd::wait()
+void Lcd::gotoXY(int x, int y)
 {
-  delay(3);
+  writeByte(0x80 | x | (0x40*y));
 }
 
 void Lcd::clear()
@@ -83,8 +87,80 @@ void Lcd::clear()
   wait();
 }
 
+void Lcd::setScrolling(bool screenshift, bool left)
+{
+ //writeByte(0x10 | ((!!screenshift)<<3) | ((!left)<<2));
+  writeByte(0x04 | ((!!screenshift)) | ((!left)<<1));
+}
+
+void Lcd::applyControls()
+{
+  writeByte(0x08 |
+    (m_cursor_is_visible<<1) |
+    (m_cursor_is_blinking<<0) |
+    (m_display_is_visible<<2));
+}
+
+void Lcd::showCursor()
+{
+  m_cursor_is_visible=true;
+  m_cursor_is_blinking=false;
+  applyControls();
+}
+
+void Lcd::showBlinkingCursor()
+{
+  m_cursor_is_visible=true;
+  m_cursor_is_blinking=true;
+  applyControls();
+}
+
+void Lcd::hideCursor()
+{
+  m_cursor_is_visible=false;
+  applyControls();
+}
+
+void Lcd::showDisplay()
+{
+  m_display_is_visible = true;
+  applyControls();
+}
+
+void Lcd::hideDisplay()
+{
+  m_display_is_visible = false;
+  applyControls();
+}
+
+void Lcd::shiftScreenLeft()
+{
+  writeByte(0b00011000);
+}
+
+void Lcd::shiftScreenRight()
+{
+  writeByte(0b00011100);
+}
+
+void Lcd::moveCursorLeft()
+{
+  writeByte(0b00010000);
+}
+
+void Lcd::moveCursorRight()
+{
+  writeByte(0b00010100);
+}
+
 // internals
 
+
+// log wait for a command
+void Lcd::wait()
+{
+  delay(3);
+}
 
 void Lcd::writeNibble(unsigned char nibble)
 {
@@ -124,7 +200,7 @@ void Lcd::setup()
   delay(1);
   writeNibble(0x02); // now: be 4 bit (and ignore rest, like above)
   writeByte(0x2C); // ok, final fix: 4 bit (0x20), 2 lines (0x08) and font 5x10 (0x04)
-  writeByte(0x0C); // display (0x04): on (0x04), cursor (0x02): off, blink (0x01): off
+  applyControls();
   clear();
   home();
 }

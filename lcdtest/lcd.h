@@ -4,9 +4,10 @@
 class Lcd {
   public:
     Lcd(char pin_d4, char pin_e, char pin_rs);
+    void setup();
+    void iterate();
     
     // the rest of the interface will be a generic interface
-    void iterate();
     void print(const char *pch);
     void home();
     void clear();
@@ -15,7 +16,6 @@ class Lcd {
     
   protected:
     // base interface
-    void setup();
     void writeByte(unsigned char byte_ch);
     void setE();
     void clearE();

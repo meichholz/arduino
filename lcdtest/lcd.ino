@@ -5,7 +5,6 @@ Lcd::Lcd(char pin_d4, char pin_e, char pin_rs) :
   m_pin_rs(pin_rs),
   m_pin_d_base(pin_d4)
 {
-  setup();
 }
 
 void Lcd::iterate()

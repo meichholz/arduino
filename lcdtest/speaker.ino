@@ -89,6 +89,11 @@ Speaker::Speaker(int pin, int poll_freq) :
 {
 }
 
+void Speaker::setup()
+{
+}
+
+
 void Speaker::play(TMelody tune)
 {
   silenced = true;

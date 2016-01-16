@@ -21,8 +21,8 @@ class App {
     void setup();
     void pushPhase(int i);
   private:
-    Lcd     *m_display;
-    Speaker *m_speaker;
+    Lcd     m_display;
+    Speaker m_speaker;
     int     ticks;
     int     phase;
     int     pollfreq;
@@ -51,23 +51,25 @@ static const byte char_face[] PROGMEM = {
 App::App(int pollfreq) :
   ticks(0),
   phase(0),
-  pollfreq(pollfreq)
+  pollfreq(pollfreq),
+  m_speaker(13, pollfreq),
+  m_display(2, 11, 12)
 {
 }
 
 void App::setup()
 {
-  m_display = new Lcd(2, 11, 12);
-  m_speaker = new Speaker(13, pollfreq);
-  m_display->home();
-  m_display->print("\1\1\1 play \1\1\1");
-  m_speaker->play(Speaker::MelodyGreeter);
+  m_display.setup(); // caveat: the arduino is not ready before global setup()
+  m_display.home();
+  m_display.print("\1\1\1 play \1\1\1");
+  m_speaker.setup();
+  m_speaker.play(Speaker::MelodyGreeter);
 }
 
 void App::iterate()
 {
-  m_speaker->iterate();
-  m_display->iterate();
+  m_speaker.iterate();
+  m_display.iterate();
   ticks--;
   if (ticks<=0) {
     ticks = 12;
@@ -78,7 +80,7 @@ void App::iterate()
 
 void App::pushPhase(int i)
 {
-  m_display->defineChar_P(1, 8, char_face+i);
+  m_display.defineChar_P(1, 8, char_face+i);
 }
 
 App app(20);

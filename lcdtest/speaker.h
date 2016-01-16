@@ -22,6 +22,7 @@ class Speaker {
      
   Speaker(int pin, int loopfreq);
   void  play(TMelody tune);
+  void setup();
   void iterate();
 
   private:

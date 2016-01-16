@@ -13,7 +13,7 @@ class Lcd {
     void clear();
     void defineChar_P(int charnum, int c_bytes, const byte *bits);
     void defineChar(int charnum, int c_bytes, const byte *bits);
-    void setScrolling(bool screenshift=false, bool left=false);
+    void setScrolling(bool reverse=false, bool screenshifting=false);
     void gotoXY(int x, int y);
     void shiftScreenLeft();
     void shiftScreenRight();

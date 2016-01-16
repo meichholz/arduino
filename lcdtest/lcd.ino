@@ -1,5 +1,7 @@
 #include "lcd.h"
 
+// see http://mil.ufl.edu/3744/docs/lcdmanual/commands.html for bit meanings
+
 Lcd::Lcd(char pin_d4, char pin_e, char pin_rs) :
   m_pin_e(pin_e),
   m_pin_rs(pin_rs),
@@ -41,7 +43,7 @@ void Lcd::defineChar_P(int charnum, int byte_c, const byte *bits)
 {
   int i;
   clearRS();
-  writeByte(0x06); // address counter INCrement
+  writeByte(0x06); // address counter INCrementing needing
   writeByte(0x40+8*charnum);
   setRS();
   for (i=0; i<byte_c;  i++) {
@@ -87,10 +89,11 @@ void Lcd::clear()
   wait();
 }
 
-void Lcd::setScrolling(bool screenshift, bool left)
+void Lcd::setScrolling(bool reverse, bool screenshifting)
 {
- //writeByte(0x10 | ((!!screenshift)<<3) | ((!left)<<2));
-  writeByte(0x04 | ((!!screenshift)) | ((!left)<<1));
+  writeByte(0x04
+    | (screenshifting ? 0x01 : 0x00)
+    | (reverse ? 0x00 : 0x02));
 }
 
 void Lcd::applyControls()

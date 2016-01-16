@@ -61,13 +61,14 @@ void App::setup()
 {
   m_display.setup(); // caveat: the arduino is not ready before global setup()
   m_display.home();
-  m_display.gotoXY(2,1);
+  m_display.gotoXY(13,1);
   m_display.showBlinkingCursor();
+  m_display.setScrolling(true); // reverse
   m_display.print("\1\1\1 play \1\1\1"); delay(2000);
-  m_display.hideDisplay();
-  m_display.shiftScreenLeft(); delay(2000);
-  m_display.showDisplay();
-  m_display.shiftScreenRight(); delay(2000);
+  //m_display.hideDisplay();
+  //m_display.shiftScreenLeft(); delay(2000);
+  //m_display.showDisplay();
+  //m_display.shiftScreenRight(); delay(2000);
   m_speaker.setup();
   m_speaker.play(Speaker::MelodyGreeter);
 }

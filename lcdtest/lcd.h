@@ -9,10 +9,11 @@ class Lcd {
     
     // the rest of the interface will be a generic interface
     void print(const char *pch);
+    void print(const __FlashStringHelper *flash_string);
     void home();
     void clear();
-    void defineChar_P(int charnum, int c_bytes, const byte *bits);
-    void defineChar(int charnum, int c_bytes, const byte *bits);
+    void defineChar(int charnum, const byte *face);
+    void defineChar_p(int charnum, const byte *face);
     void setScrolling(bool reverse=false, bool screenshifting=false);
     void gotoXY(int x, int y);
     void shiftScreenLeft();
@@ -24,6 +25,7 @@ class Lcd {
     void hideCursor();
     void showDisplay();
     void hideDisplay();
+    int  faceSize() { return 8; }
     
   protected:
     // base interface

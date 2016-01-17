@@ -127,11 +127,6 @@ void Speaker::nextNoteEvent()
 
 void Speaker::iterate()
 {
-  if (poll_freq>=1000L) {
-    delayMicroseconds((unsigned int)(1000000L/(long)poll_freq));
-  } else {
-    delay((unsigned int)(1000L/(long)poll_freq));
-  }
   if (silenced) return;
   duration--;
   if (duration <= 0 && melody!=NULL_MELODY) {

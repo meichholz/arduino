@@ -27,27 +27,42 @@ void Lcd::print(const char *pch)
   clearRS();
 }
 
-void Lcd::defineChar(int charnum, int byte_c, const byte *bits)
+void Lcd::print(const __FlashStringHelper *flash_string)
 {
-  int i;
+  const char * pch = reinterpret_cast<const char *>(flash_string);
+  setRS();
+  char ch;
+  do {
+    ch = pgm_read_byte(pch);
+    pch++;
+    if (ch) {
+      writeByte(ch);
+    }
+  } while(ch);
+  clearRS();
+}
+
+void Lcd::defineChar(int charnum, const byte *face)
+{
+  int cch=faceSize();
   clearRS();
   writeByte(0x06); // address counter INCrement
-  writeByte(0x40+8*charnum);
+  writeByte(0x40 + cch*charnum);
   setRS();
-  for (i=0; i<byte_c;  i++) {
-    writeByte(bits[i]);
+  for (int i=0; i<cch;  i++) {
+    writeByte(face[i]);
   }
   clearRS();
 }
-void Lcd::defineChar_P(int charnum, int byte_c, const byte *bits)
+void Lcd::defineChar_p(int charnum, const byte *flash_bits)
 {
-  int i;
+  int cch=faceSize();
   clearRS();
   writeByte(0x06); // address counter INCrementing needing
-  writeByte(0x40+8*charnum);
+  writeByte(0x40 + cch*charnum);
   setRS();
-  for (i=0; i<byte_c;  i++) {
-    writeByte(pgm_read_byte(bits+i));
+  for (int i=0; i<cch;  i++) {
+    writeByte(pgm_read_byte(flash_bits+i));
   }
   clearRS();
 }

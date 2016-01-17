@@ -50,36 +50,22 @@ void loop() {
 }
 
 // and now for the details
+// cg helper: http://www.8051projects.net/lcd-interfacing/lcd-custom-character.php
 
-static const byte cg_copyright[] PROGMEM = {
-  0b01110,
-  0b10001,
-  0b10111,
-  0b11001,
-  0b11001,
-  0b10111,
-  0b10001,
-  0b01110,
-};
-
+static const byte cg_copyright[] PROGMEM = { 0xe, 0x11, 0x17, 0x19, 0x19, 0x17, 0x11, 0xe };
 static const byte cg_face[] PROGMEM = {
-  0b00000,
-  0b11011,
-  0b00000,
-  0b00100,
-  0b00100,
-  0b10001,
-  0b01110,
-  0b00000,
-  
-  0b00000,
-  0b11011,
-  0b00000,
-  0b00100,
-  0b00100,
-  0b10001,
-  0b01110,
-  0b00000,
+  0x00,0x1b,0x00,0x04,0x04,0x11,0x0e,0x00,
+  0x00,0x1b,0x00,0x04,0x04,0x11,0x0e,0x00,
+  };
+static const byte cg_clock[] PROGMEM = {
+  0x0, 0x0, 0x1f, 0x11, 0x17, 0x11, 0x1f, 0x0,
+  0x0, 0x0, 0x1f, 0x11, 0x17, 0x15, 0x1f, 0x0,
+  0x0, 0x0, 0x1f, 0x11, 0x15, 0x15, 0x1f, 0x0,
+  0x0, 0x0, 0x1f, 0x11, 0x1d, 0x15, 0x1f, 0x0,
+  0x0, 0x0, 0x1f, 0x11, 0x1d, 0x11, 0x1f, 0x0,
+  0x0, 0x0, 0x1f, 0x15, 0x1d, 0x11, 0x1f, 0x0,
+  0x0, 0x0, 0x1f, 0x15, 0x15, 0x11, 0x1f, 0x0,
+  0x0, 0x0, 0x1f, 0x15, 0x17, 0x11, 0x1f, 0x0,
 };
 
 App::App(int pollfreq) :
@@ -94,10 +80,11 @@ App::App(int pollfreq) :
 
 void App::startUI()
 {
-  display.gotoXY(13,0);
+  // display.gotoXY(13,0);
+  display.home();
   display.showBlinkingCursor();
-  display.setScrolling(true); // reverse
-  display.print(F("\1\1\1 yalp \1\1\1"));
+  // display.setScrolling(true); // reverse
+  display.print(F("\3\3 losa geht\1 \3\3"));
 }
 
 void App::startDemo()
@@ -142,8 +129,9 @@ void App::refreshState()
       startDemo();
       break;
     case AppStateDemo:
-      ticks = ticksFor(500); // 0,5 sec cycle
+      ticks = ticksFor(150);
       display.defineChar_p(1, cg_face+phase);
+      display.defineChar_p(3, cg_clock+8*phase);
       if (++phase >= 8) phase=0;
       break;
   }

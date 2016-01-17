@@ -18,54 +18,44 @@ void Lcd::iterate()
 
 void Lcd::print(const char *pch)
 {
-  setRS();
   while (*pch) {
-    writeByte(*pch);
+    writeByte(*pch, true);
     pch++;
   }
-  clearRS();
 }
 
 void Lcd::print(const __FlashStringHelper *flash_string)
 {
   const char * pch = reinterpret_cast<const char *>(flash_string);
-  setRS();
   char ch;
   do {
     ch = pgm_read_byte(pch);
     pch++;
     if (ch) {
-      writeByte(ch);
+      writeByte(ch, true);
     }
   } while(ch);
-  clearRS();
 }
 
 void Lcd::defineChar(int charnum, const byte *face)
 {
   int cch=faceSize();
-  clearRS();
   writeByte(0x06); // address counter INCrement
   writeByte(0x40 + cch*charnum);
-  setRS();
   for (int i=0; i<cch;  i++) {
-    writeByte(face[i]);
+    writeByte(face[i], true);
   }
-  clearRS();
 }
+
 void Lcd::defineChar_p(int charnum, const byte *flash_bits)
 {
   int cch=faceSize();
-  clearRS();
   writeByte(0x06); // address counter INCrementing needing
   writeByte(0x40 + cch*charnum);
-  setRS();
   for (int i=0; i<cch;  i++) {
-    writeByte(pgm_read_byte(flash_bits+i));
+    writeByte(pgm_read_byte(flash_bits+i), true);
   }
-  clearRS();
 }
-
 
 void Lcd::home()
 {
@@ -158,24 +148,14 @@ void Lcd::moveCursorRight()
 
 // and now for interface and geometry specific implementations
 
-void Lcd1602::setRS()
+void Lcd1602::setRS(bool state)
 {
-  digitalWrite(m_pin_rs, HIGH);
+  digitalWrite(m_pin_rs, state ? HIGH : LOW);
 }
 
-void Lcd1602::clearRS()
+void Lcd1602::setE(bool state)
 {
-  digitalWrite(m_pin_rs, LOW);
-}
-
-void Lcd1602::setE()
-{
-  digitalWrite(m_pin_e, HIGH);
-}
-
-void Lcd1602::clearE()
-{
-  digitalWrite(m_pin_e, LOW);
+  digitalWrite(m_pin_e, state ? HIGH : LOW);
 }
 
 void Lcd1602::gotoXY(int x, int y)
@@ -194,16 +174,22 @@ void Lcd1602::writeNibble(unsigned char nibble)
   for (int i=0; i<4; i++) {
     digitalWrite(m_pin_d_base+i, (nibble & (8>>i)) ? HIGH : LOW);
   }
-  setE();
+  setE(true);
   delayMicroseconds(2);
-  clearE();
+  setE(false);
   delayMicroseconds(2);
 }
 
-void Lcd1602::writeByte(unsigned char byte_ch)
+void Lcd1602::writeByte(unsigned char byte_ch, bool as_data)
 {
+  if (as_data) {
+    setRS(true);
+  }
   writeNibble((byte_ch>>4) & 0x0F);
   writeNibble(byte_ch & 0x0F);
+  if (as_data) {
+    setRS(false);
+  }
   delayMicroseconds(60);
 }
 
@@ -214,10 +200,10 @@ void Lcd1602::setup()
   for (int i=0; i<4; i++) {
     pinMode(m_pin_d_base+i, OUTPUT);
   }
-  clearE();
-  setRS();
   // reliable initialization procedure for 4 bit
-  clearRS();
+  setE(false);
+  setRS(true);
+  setRS(false);
   delayMicroseconds(15000); // wait for power up
   writeNibble(0x03); // be 8 bit
   delayMicroseconds(4100);

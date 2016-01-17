@@ -2,15 +2,14 @@
 
 // see http://mil.ufl.edu/3744/docs/lcdmanual/commands.html for bit meanings
 
-Lcd::Lcd(char pin_d4, char pin_e, char pin_rs) :
-  m_pin_e(pin_e),
-  m_pin_rs(pin_rs),
-  m_pin_d_base(pin_d4),
+Lcd::Lcd() :
   m_cursor_is_visible(false),
   m_cursor_is_blinking(false),
   m_display_is_visible(true)
 {
 }
+
+Lcd::~Lcd() {}
 
 void Lcd::iterate()
 {
@@ -67,35 +66,11 @@ void Lcd::defineChar_p(int charnum, const byte *flash_bits)
   clearRS();
 }
 
-void Lcd::setRS()
-{
-  digitalWrite(m_pin_rs, HIGH);
-}
-
-void Lcd::clearRS()
-{
-  digitalWrite(m_pin_rs, LOW);
-}
-
-void Lcd::setE()
-{
-  digitalWrite(m_pin_e, HIGH);
-}
-
-void Lcd::clearE()
-{
-  digitalWrite(m_pin_e, LOW);
-}
 
 void Lcd::home()
 {
   writeByte(0x02);
   wait();
-}
-
-void Lcd::gotoXY(int x, int y)
-{
-  writeByte(0x80 | x | (0x40*y));
 }
 
 void Lcd::clear()
@@ -118,6 +93,16 @@ void Lcd::applyControls()
     (m_cursor_is_blinking<<0) |
     (m_display_is_visible<<2));
 }
+
+Lcd1602::Lcd1602(int pin_d4, int pin_e, int pin_rs) :
+  Lcd(),
+  m_pin_e(pin_e),
+  m_pin_rs(pin_rs),
+  m_pin_d_base(pin_d4)
+{
+}
+
+Lcd1602::~Lcd1602() {}
 
 void Lcd::showCursor()
 {
@@ -171,16 +156,40 @@ void Lcd::moveCursorRight()
   writeByte(0b00010100);
 }
 
-// internals
+// and now for interface and geometry specific implementations
 
+void Lcd1602::setRS()
+{
+  digitalWrite(m_pin_rs, HIGH);
+}
+
+void Lcd1602::clearRS()
+{
+  digitalWrite(m_pin_rs, LOW);
+}
+
+void Lcd1602::setE()
+{
+  digitalWrite(m_pin_e, HIGH);
+}
+
+void Lcd1602::clearE()
+{
+  digitalWrite(m_pin_e, LOW);
+}
+
+void Lcd1602::gotoXY(int x, int y)
+{
+  writeByte(0x80 | x | (0x40*y));
+}
 
 // log wait for a command
-void Lcd::wait()
+void Lcd1602::wait()
 {
   delay(3);
 }
 
-void Lcd::writeNibble(unsigned char nibble)
+void Lcd1602::writeNibble(unsigned char nibble)
 {
   for (int i=0; i<4; i++) {
     digitalWrite(m_pin_d_base+i, (nibble & (8>>i)) ? HIGH : LOW);
@@ -191,14 +200,14 @@ void Lcd::writeNibble(unsigned char nibble)
   delayMicroseconds(2);
 }
 
-void Lcd::writeByte(unsigned char byte_ch)
+void Lcd1602::writeByte(unsigned char byte_ch)
 {
   writeNibble((byte_ch>>4) & 0x0F);
   writeNibble(byte_ch & 0x0F);
   delayMicroseconds(60);
 }
 
-void Lcd::setup()
+void Lcd1602::setup()
 {
   pinMode(m_pin_e, OUTPUT);
   pinMode(m_pin_rs, OUTPUT);

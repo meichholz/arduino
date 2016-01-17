@@ -25,7 +25,7 @@ class App {
     void iterate();
     void setup();
   private:
-    Lcd     display;
+    Lcd1602 display;
     Speaker speaker;
     int     ticks;
     int     phase;

@@ -1,0 +1,10 @@
+arduino-tvout
+=============
+
+https://github.com/gregwinn/arduino-tvout
+
+$ ln -s ../../3rdparty/arduino-tvout .
+$ cd arduino-tvout
+$ ln -s TVoutfonts/*.h TVoutfonts/*.cpp .
+
+The additional symlinks are needed to compile and link the examples.

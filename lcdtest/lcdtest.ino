@@ -2,17 +2,20 @@
 // home made bitbang LCD 1602 interface, 4bit mode
 // just for fun, from the spec 2015
 // 
-// Arduino -> Shield
-// D2..D5 -> D4..D7
-// D11 -> E
-// D12 -> RS
 // GND -> RW, K, VSS
 // 5V -> A, VDD
 // Poti -> V0
-// D13 -> Buzzer
 
 #include "speaker.h"
 #include "lcd.h"
+
+#define PIN_E       2
+#define PIN_RS      3
+#define PIN_D4      4
+#define PIN_D5      5
+#define PIN_D6      6
+#define PIN_D7      7
+#define PIN_SPEAKER 8
 
 class App {
   enum TAppState {
@@ -25,12 +28,12 @@ class App {
     void iterate();
     void setup();
   private:
-    Lcd1602 display;
-    Speaker speaker;
-    int     ticks;
-    int     phase;
-    TAppState state;
-    int     pollfreq; // in Hertz
+    Lcd1602   _display;
+    TAppState _state;
+    Speaker   _speaker;
+    int       _ticks;
+    int       _phase;
+    int       _pollfreq; // in Hertz
     
     void    startUI();
     void    startDemo();
@@ -69,86 +72,86 @@ static const byte cg_clock[] PROGMEM = {
 };
 
 App::App(int pollfreq) :
-  ticks(0),
-  phase(0),
-  pollfreq(pollfreq),
-  speaker(13, pollfreq),
-  display(2, 11, 12),
-  state(AppStateInit)
+  _ticks(0),
+  _phase(0),
+  _pollfreq(pollfreq),
+  _speaker(),
+  _display(16,2),
+  _state(AppStateInit)
 {
 }
 
 void App::startUI()
 {
   // display.gotoXY(13,0);
-  display.home();
-  display.showBlinkingCursor();
+  _display.home();
+  _display.showBlinkingCursor();
   // display.setScrolling(true); // reverse
-  display.print(F("\3\3 losa geht\1 \3\3"));
+  _display.print(F("\3\3 losa geht\1 \3\3"));
 }
 
 void App::startDemo()
 {
-  display.clear();
+  _display.clear();
   startUI();
 }
 
 void App::setup()
 {
-  display.setup(); // caveat: the arduino is not ready before global setup()
-  speaker.setup();
-  speaker.play(Speaker::MelodyGreeter);
-  display.defineChar_p(2, cg_copyright);
-  display.defineChar_p(1, cg_face);
-  display.home();
-  display.print(F("***  LCD-UI  ***"));
-  display.gotoXY(0,1);
-  display.print(F("\2M.Eichholz 2015"));
-  state = AppStateGreeting;
-  ticks = ticksFor(2000); // 2 seconds
+  _display.begin(PIN_E, -1, PIN_RS, PIN_D4, PIN_D5, PIN_D6, PIN_D7);
+  _speaker.begin(PIN_SPEAKER, _pollfreq);
+  _speaker.play(Speaker::MelodyGreeter);
+  _display.defineChar_p(2, cg_copyright);
+  _display.defineChar_p(1, cg_face);
+  _display.home();
+  _display.print(F("***  LCD-UI  ***"));
+  _display.gotoXY(0,1);
+  _display.print(F("\2M.Eichholz 2015"));
+  _state = AppStateGreeting;
+  _ticks = ticksFor(2000); // 2 seconds
 }
 
 void App::iterate()
 {
   delayLoop();
-  speaker.iterate();
-  display.iterate();
-  ticks--;
-  if (ticks<=0) {
-    ticks = 1; // default: just minimal re-check
+  _speaker.iterate();
+  _display.iterate();
+  _ticks--;
+  if (_ticks<=0) {
+    _ticks = 1; // default: just minimal re-check
     refreshState();
   }
 }
 
 void App::refreshState()
 {
-  switch (state) {
+  switch (_state) {
     case AppStateGreeting:
-      state = AppStateDemo;
-      phase = 1;
+      _state = AppStateDemo;
+      _phase = 1;
       startDemo();
       break;
     case AppStateDemo:
-      ticks = ticksFor(150);
-      display.defineChar_p(1, cg_face+phase);
-      display.defineChar_p(3, cg_clock+8*phase);
-      if (++phase >= 8) phase=0;
+      _ticks = ticksFor(150);
+      _display.defineChar_p(1, cg_face + _phase);
+      _display.defineChar_p(3, cg_clock + 8*_phase);
+      if (++_phase >= 8) _phase = 0;
       break;
   }
 }
 
 void App::delayLoop()
 {
-  if (pollfreq >= 1000) {
-    delayMicroseconds((unsigned int)(1000000L/(long)pollfreq));
+  if (_pollfreq >= 1000) {
+    delayMicroseconds((unsigned int)(1000000L/(long)_pollfreq));
   } else {
-    delay((unsigned int)(1000L/(long)pollfreq));
+    delay((unsigned int)(1000L/(long)_pollfreq));
   }
 }
 
 int App::ticksFor(int millisecs)
 {
-  return (int)(((long)pollfreq*(long)millisecs+500L)/1000L);
+  return (int)(((long)_pollfreq*(long)millisecs+500L)/1000L);
 }
 
 

@@ -78,58 +78,51 @@ const signed char *  const Speaker::melodies[] PROGMEM = {
   NULL_MELODY
 };
   
-
-Speaker::Speaker(int pin, int poll_freq) :
-  pin(pin),
-  duration(0),
-  melody(NULL_MELODY),
-  next_note(0),
-  silenced(true),
-  poll_freq(poll_freq)
+void Speaker::begin(int pin, int pollfreq)
 {
+  _pin = pin;
+  _poll_freq = pollfreq;
+  _silenced = true;
+  _duration = 0;
+  _melody = NULL_MELODY;
+  _next_note = 0;
 }
-
-void Speaker::setup()
-{
-}
-
 
 void Speaker::play(TMelody tune)
 {
-  silenced = true;
-  duration=0;
-  melody = static_cast<const signed char *>(pgm_read_ptr_near(Speaker::melodies + tune));
-  next_note = 0;
-  key_offset = 12;
-  silenced = false;
+  _duration=0;
+  _melody = static_cast<const signed char *>(pgm_read_ptr_near(Speaker::melodies + tune));
+  _next_note = 0;
+  _key_offset = 12;
+  _silenced = false;
 }
 
 void Speaker::nextNoteEvent()
 {
-  signed char opcode = pgm_read_byte_near(melody+(next_note++));
-  signed char arg = pgm_read_byte_near(melody+(next_note++));
+  signed char opcode = pgm_read_byte_near( _melody + (_next_note++));
+  signed char arg = pgm_read_byte_near( _melody + (_next_note++));
   if (opcode < 0) {
     if (opcode == -OpEndOfTune) {
-        silenced = true;
-        melody = NULL_MELODY;
-        noTone(pin);
+        _silenced = true;
+        _melody = NULL_MELODY;
+        noTone(_pin);
     } else if (opcode == -OpTranspose) {
-        key_offset = arg;
+        _key_offset = arg;
     } else if (opcode == -OpJumpTo) {
-        next_note = (unsigned char)arg;
+        _next_note = (unsigned char)arg;
     }
   } else {
-   uint16_t toneval = pgm_read_word_near(Speaker::tones + opcode + key_offset);
-   tone(pin, toneval);
-   duration = ((long)arg*poll_freq+50L)/100L;
+   uint16_t toneval = pgm_read_word_near(Speaker::tones + opcode + _key_offset);
+   tone(_pin, toneval);
+   _duration = ((long)arg * _poll_freq + 50L) / 100L;
   } // note opcode
 }
 
 void Speaker::iterate()
 {
-  if (silenced) return;
-  duration--;
-  if (duration <= 0 && melody!=NULL_MELODY) {
+  if (_silenced) return;
+  _duration--;
+  if (_duration <= 0 && _melody != NULL_MELODY) {
     nextNoteEvent();
   }
 }

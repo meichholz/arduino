@@ -18,24 +18,22 @@ class Speaker {
     MelodyGreeter,
     MelodyCooling,
   };
-    
-     
-  Speaker(int pin, int loopfreq);
+  
   void  play(TMelody tune);
-  void setup();
+  void begin(int pin, int pollfreq);
   void iterate();
 
   private:
 
   void nextNoteEvent();
 
-  int pin;
-  int duration;
-  int next_note;
-  int poll_freq; // normally 100 (Hz)
-  bool  silenced;
-  signed const char *melody;
-  signed char key_offset;
+  int _pin;
+  int _poll_freq; // normally 100 (Hz)
+  int _duration;
+  int _next_note;
+  bool _silenced;
+  signed const char *_melody;
+  signed char _key_offset;
   
   static const unsigned int tones[];
   static const signed char * const melodies[];

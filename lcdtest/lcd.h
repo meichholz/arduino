@@ -4,7 +4,6 @@
 class Lcd {
   public:
     Lcd(int columns, int rows);
-    ~Lcd();
     void iterate();
 
   protected:
@@ -52,17 +51,16 @@ class Lcd {
  
 };
 
-class Lcd1602 : public Lcd {
+class LcdOnPorts : public Lcd {
 
   public:
     
-    Lcd1602(int columns, int rows);
-    ~Lcd1602();
-    virtual void begin(int pin_e, int pin_rw, int pin_rs, int pin_d4, int pin_d5, int pin_d6, int pin_d7);
+    LcdOnPorts(int columns, int rows);
+    virtual void begin(int pin_e, int pin_rs, int pin_d4, int pin_d5, int pin_d6, int pin_d7);
     virtual void gotoXY(int x, int y);
     
   protected:
-    int  _pin_e, _pin_rs, _pin_rw;
+    int  _pin_e, _pin_rs;
     int  _pin_d4, _pin_d5, _pin_d6, _pin_d7;
     
     virtual void writeByte(unsigned char byte_ch, bool as_data);
@@ -75,6 +73,40 @@ class Lcd1602 : public Lcd {
     void setRS() { setRS(true); }
     void clearRS() { setRS(false); }
 
+    void writeNibble(unsigned char nibble);
+};
+
+class LcdOnI2c : public Lcd {
+
+  public:
+    
+    LcdOnI2c(int columns, int rows);
+    virtual void begin(int i2c_addr, int pin_e, int pin_rw, int pin_rs, int pin_d4, int pin_d5, int pin_d6, int pin_d7, int pin_bl);
+    virtual void gotoXY(int x, int y);
+    
+  protected:
+    char _pin_e, _pin_rs;
+    char _pin_rw, _pin_bl;
+    char _pin_d4, _pin_d5, _pin_d6, _pin_d7;
+    byte _portval;
+    byte _addr;
+    bool _state_rs;
+    bool _state_rw;
+    bool _state_e;
+    bool _state_bl;
+    
+    virtual void writeByte(unsigned char byte_ch, bool as_data);
+    virtual void wait(); // long command wait
+    void setE(bool state);
+    void setE() { setE(true); }
+    void clearE() { setE(false); }
+    
+    void setRS(bool state);
+    void setRS() { setRS(true); }
+    void clearRS() { setRS(false); }
+
+    void setPortBit(int bitno, bool bitval);
+    void writePort();
     void writeNibble(unsigned char nibble);
 };
 

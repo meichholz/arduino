@@ -1,6 +1,7 @@
 
-// home made bitbang LCD 1602 interface, 4bit mode
-// just for fun, from the spec 2015
+// initially testbed for home made bitbang LCD 1602 interface
+// (4bit mode, just for fun, from the spec 2015)
+// Also for UI concepts, I2C testing and so on.
 // 
 // GND -> RW, K, VSS
 // 5V -> A, VDD
@@ -9,8 +10,13 @@
 #include "speaker.h"
 #include "lcd.h"
 
+#include "Wire.h"
+
+#define LCD_I2C_ADDR  0x27
+#define PIN_BL      3
 #define PIN_E       2
-#define PIN_RS      3
+#define PIN_RW      1
+#define PIN_RS      0
 #define PIN_D4      4
 #define PIN_D5      5
 #define PIN_D6      6
@@ -28,12 +34,12 @@ class App {
     void iterate();
     void setup();
   private:
-    Lcd1602   _display;
-    TAppState _state;
-    Speaker   _speaker;
-    int       _ticks;
-    int       _phase;
-    int       _pollfreq; // in Hertz
+    LcdOnI2c    _display;
+    TAppState   _state;
+    Speaker     _speaker;
+    int         _ticks;
+    int         _phase;
+    int         _pollfreq; // in Hertz
     
     void    startUI();
     void    startDemo();
@@ -76,7 +82,7 @@ App::App(int pollfreq) :
   _phase(0),
   _pollfreq(pollfreq),
   _speaker(),
-  _display(16,2),
+  _display(20,4),
   _state(AppStateInit)
 {
 }
@@ -85,7 +91,7 @@ void App::startUI()
 {
   // display.gotoXY(13,0);
   _display.home();
-  _display.showBlinkingCursor();
+  //_display.showBlinkingCursor();
   // display.setScrolling(true); // reverse
   _display.print(F("\3\3 losa geht\1 \3\3"));
 }
@@ -98,7 +104,8 @@ void App::startDemo()
 
 void App::setup()
 {
-  _display.begin(PIN_E, -1, PIN_RS, PIN_D4, PIN_D5, PIN_D6, PIN_D7);
+  Wire.begin();
+  _display.begin(LCD_I2C_ADDR, PIN_E, PIN_RW, PIN_RS, PIN_D4, PIN_D5, PIN_D6, PIN_D7, PIN_BL);
   _speaker.begin(PIN_SPEAKER, _pollfreq);
   _speaker.play(Speaker::MelodyGreeter);
   _display.defineChar_p(2, cg_copyright);

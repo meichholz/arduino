@@ -2,6 +2,8 @@
 #include "WiredLcd.h"
 #include "Wire.h"
 
+// Alternative Library: http://playground.arduino.cc/Main/SoftwareI2CLibrary
+
 // ==========================================================================
 // specific class: WiredLcd
 // ==========================================================================

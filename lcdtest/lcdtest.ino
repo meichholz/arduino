@@ -8,19 +8,12 @@
 // Poti -> V0
 
 #include "Speaker.h"
-#include "WiredLcd.h"
+#include "Lcd2004.h"
 
 #include "Wire.h"
 
 #define LCD_I2C_ADDR  0x27
-#define PIN_BL      3
-#define PIN_E       2
-#define PIN_RW      1
-#define PIN_RS      0
-#define PIN_D4      4
-#define PIN_D5      5
-#define PIN_D6      6
-#define PIN_D7      7
+
 #define PIN_SPEAKER 8
 
 class App {
@@ -34,7 +27,7 @@ class App {
     void iterate();
     void setup();
   private:
-    WiredLcd    _display;
+    Lcd2004     _display;
     TAppState   _state;
     Speaker     _speaker;
     int         _ticks;
@@ -81,7 +74,7 @@ App::App(int pollfreq) :
   _phase(0),
   _pollfreq(pollfreq),
   _speaker(),
-  _display(20,4),
+  _display(),
   _state(AppStateInit)
 {
 }
@@ -104,7 +97,9 @@ void App::startDemo()
 void App::setup()
 {
   Wire.begin();
-  _display.begin(LCD_I2C_ADDR, PIN_E, PIN_RW, PIN_RS, PIN_D4, PIN_D5, PIN_D6, PIN_D7, PIN_BL);
+  // TODO: Abstraktion von Wire
+  // TODO: Zeilenstartberechnung
+  _display.begin(LCD_I2C_ADDR);
   _speaker.begin(PIN_SPEAKER, _pollfreq);
   _speaker.play(Speaker::MelodyGreeter);
   _display.defineChar_p(2, cg_copyright);

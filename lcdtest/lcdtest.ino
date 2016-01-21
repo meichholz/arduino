@@ -111,7 +111,7 @@ void App::setup()
   _display.defineChar_p(1, cg_face);
   _display.home();
   _display.print(F("***  LCD-UI  ***"));
-  _display.gotoXY(0,1);
+  _display.setCursor(0,1);
   _display.print(F("\2M.Eichholz 2015"));
   _state = AppStateGreeting;
   _ticks = ticksFor(2000); // 2 seconds

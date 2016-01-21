@@ -12,6 +12,7 @@ class Lcd {
     bool _cursor_is_visible;
     bool _cursor_is_blinking;
     bool _display_is_visible;
+    bool _autoscrolling;
     int  _face_size;
 
   public:
@@ -25,22 +26,24 @@ class Lcd {
     void defineChar(int charnum, const byte *face);
     void defineChar_p(int charnum, const byte *face);
     void setScrolling(bool reverse=false, bool screenshifting=false);
-    void shiftScreenLeft();
-    void shiftScreenRight();
-    void moveCursorLeft();
-    void moveCursorRight();
-    void showCursor();
-    void showBlinkingCursor();
-    void hideCursor();
-    void showDisplay();
-    void hideDisplay();
+    void scrollDisplayLeft();
+    void scrollDisplayRight();
+    void rightToLeft();
+    void leftToRight();
+    void cursor();
+    void blink();
+    void noCursor();
+    void display();
+    void noDisplay();
+    void autoscroll();
+    void noAutoscroll();
     int columns() { return _columns; }
     int rows() { return _rows; }
     int faceSize() { return _face_size; }
     
     
     // device specific interface
-    virtual void gotoXY(int x, int y) = 0;
+    void setCursor(int x, int y);
     
   protected:
     // base interface

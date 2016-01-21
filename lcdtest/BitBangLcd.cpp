@@ -22,11 +22,6 @@ void BitBangLcd::setE(bool state)
   digitalWrite(_pin_e, state ? HIGH : LOW);
 }
 
-void BitBangLcd::gotoXY(int x, int y)
-{
-  command(0x80 | x | (0x40*y));
-}
-
 // log wait for a command
 void BitBangLcd::wait()
 {

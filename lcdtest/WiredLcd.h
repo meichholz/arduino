@@ -9,7 +9,6 @@ class WiredLcd : public Lcd {
     
     WiredLcd(int columns, int rows);
     virtual void begin(int i2c_addr, int pin_e, int pin_rw, int pin_rs, int pin_d4, int pin_d5, int pin_d6, int pin_d7, int pin_bl);
-    virtual void gotoXY(int x, int y);
     
   protected:
     char _pin_e, _pin_rs;

@@ -9,7 +9,6 @@ class BitBangLcd : public Lcd {
     
     BitBangLcd(int columns, int rows);
     virtual void begin(int pin_e, int pin_rs, int pin_d4, int pin_d5, int pin_d6, int pin_d7);
-    virtual void gotoXY(int x, int y);
     
   protected:
     int  _pin_e, _pin_rs;

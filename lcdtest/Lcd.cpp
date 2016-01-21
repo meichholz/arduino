@@ -12,6 +12,7 @@ Lcd::Lcd(int columns, int rows) :
   _cursor_is_visible(false),
   _cursor_is_blinking(false),
   _display_is_visible(true),
+  _autoscrolling(false),
   _columns(columns), _rows(rows)
 {
 }
@@ -84,6 +85,23 @@ void Lcd::clear()
   wait();
 }
 
+void Lcd::autoscroll()
+{
+  _autoscrolling = true;
+  applyControls();
+}
+
+void Lcd::noAutoscroll()
+{
+  _autoscrolling = false;
+  applyControls();
+}
+
+void Lcd::setCursor(int x, int y)
+{
+  command(0x80 | x | (0x40*y)); // todo: virtualize address offset calculation
+}
+
 void Lcd::setScrolling(bool reverse, bool screenshifting)
 {
   command(0x04
@@ -97,56 +115,57 @@ void Lcd::applyControls()
     (_cursor_is_visible<<1) |
     (_cursor_is_blinking<<0) |
     (_display_is_visible<<2));
+    // TODO: Autoscrolling ?
 }
 
-void Lcd::showCursor()
+void Lcd::cursor()
 {
   _cursor_is_visible=true;
   _cursor_is_blinking=false;
   applyControls();
 }
 
-void Lcd::showBlinkingCursor()
+void Lcd::blink()
 {
   _cursor_is_visible=true;
   _cursor_is_blinking=true;
   applyControls();
 }
 
-void Lcd::hideCursor()
+void Lcd::noCursor()
 {
   _cursor_is_visible=false;
   applyControls();
 }
 
-void Lcd::showDisplay()
+void Lcd::display()
 {
   _display_is_visible = true;
   applyControls();
 }
 
-void Lcd::hideDisplay()
+void Lcd::noDisplay()
 {
   _display_is_visible = false;
   applyControls();
 }
 
-void Lcd::shiftScreenLeft()
+void Lcd::scrollDisplayLeft()
 {
   command(0b00011000);
 }
 
-void Lcd::shiftScreenRight()
+void Lcd::scrollDisplayRight()
 {
   command(0b00011100);
 }
 
-void Lcd::moveCursorLeft()
+void Lcd::rightToLeft()
 {
   command(0b00010000);
 }
 
-void Lcd::moveCursorRight()
+void Lcd::leftToRight()
 {
   command(0b00010100);
 }

@@ -31,11 +31,6 @@ void WiredLcd::setE(bool state)
   writePort();
 }
 
-void WiredLcd::gotoXY(int x, int y)
-{
-  command(0x80 | x | (0x40*y));
-}
-
 // log wait for a command
 void WiredLcd::wait()
 {

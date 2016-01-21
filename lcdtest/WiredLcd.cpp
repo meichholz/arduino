@@ -31,6 +31,12 @@ void WiredLcd::setE(bool state)
   writePort();
 }
 
+void WiredLcd::setBL(bool state)
+{
+  _state_bl = state;
+  writePort();
+}
+
 // log wait for a command
 void WiredLcd::wait()
 {

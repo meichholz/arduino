@@ -25,11 +25,13 @@ class WiredLcd : public Lcd {
     virtual void wait(); // long command wait
     void setE(bool state);
     void setE() { setE(true); }
-    void clearE() { setE(false); }
-    
+    void clearE() { setE(false); } 
     void setRS(bool state);
     void setRS() { setRS(true); }
     void clearRS() { setRS(false); }
+    void setBL(bool state);
+    void backlight() { setBL(true); }
+    void noBacklight() { setBL(false); }
 
     void setPortBit(int bitno, bool bitval);
     void writePort();

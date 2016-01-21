@@ -7,8 +7,8 @@
 // 5V -> A, VDD
 // Poti -> V0
 
-#include "speaker.h"
-#include "lcd.h"
+#include "Speaker.h"
+#include "WiredLcd.h"
 
 #include "Wire.h"
 
@@ -34,7 +34,7 @@ class App {
     void iterate();
     void setup();
   private:
-    LcdOnI2c    _display;
+    WiredLcd    _display;
     TAppState   _state;
     Speaker     _speaker;
     int         _ticks;
@@ -44,7 +44,6 @@ class App {
     void    startUI();
     void    startDemo();
     int     ticksFor(int millisecs);
-    void    delayLoop();
     void    refreshState();
 };
 
@@ -120,7 +119,7 @@ void App::setup()
 
 void App::iterate()
 {
-  delayLoop();
+  _speaker.delayLoop();
   _speaker.iterate();
   _display.iterate();
   _ticks--;
@@ -144,15 +143,6 @@ void App::refreshState()
       _display.defineChar_p(3, cg_clock + 8*_phase);
       if (++_phase >= 8) _phase = 0;
       break;
-  }
-}
-
-void App::delayLoop()
-{
-  if (_pollfreq >= 1000) {
-    delayMicroseconds((unsigned int)(1000000L/(long)_pollfreq));
-  } else {
-    delay((unsigned int)(1000L/(long)_pollfreq));
   }
 }
 

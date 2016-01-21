@@ -1,38 +1,39 @@
-#include "lcd.h"
+#include "Arduino.h"
+#include "BitBangLcd.h"
 
 // ==========================================================================
-// specific class: LcdOnPorts
+// specific class: BitBangLcd
 // ==========================================================================
 
-LcdOnPorts::LcdOnPorts(int columns, int rows) :
+BitBangLcd::BitBangLcd(int columns, int rows) :
   Lcd(columns, rows),
   _pin_e(-1), _pin_rs(-1),
   _pin_d4(-1), _pin_d5(-1), _pin_d6(-1), _pin_d7(-1)
 {
 }
 
-void LcdOnPorts::setRS(bool state)
+void BitBangLcd::setRS(bool state)
 {
   digitalWrite(_pin_rs, state ? HIGH : LOW);
 }
 
-void LcdOnPorts::setE(bool state)
+void BitBangLcd::setE(bool state)
 {
   digitalWrite(_pin_e, state ? HIGH : LOW);
 }
 
-void LcdOnPorts::gotoXY(int x, int y)
+void BitBangLcd::gotoXY(int x, int y)
 {
   command(0x80 | x | (0x40*y));
 }
 
 // log wait for a command
-void LcdOnPorts::wait()
+void BitBangLcd::wait()
 {
   delay(3);
 }
 
-void LcdOnPorts::writeNibble(unsigned char nibble)
+void BitBangLcd::writeNibble(unsigned char nibble)
 {
   digitalWrite(_pin_d4, (nibble&0x01) ? HIGH : LOW);
   digitalWrite(_pin_d5, (nibble&0x02) ? HIGH : LOW);
@@ -44,7 +45,7 @@ void LcdOnPorts::writeNibble(unsigned char nibble)
   delayMicroseconds(2);
 }
 
-void LcdOnPorts::writeByte(unsigned char byte_ch, bool as_data)
+void BitBangLcd::writeByte(unsigned char byte_ch, bool as_data)
 {
   if (as_data) {
     setRS();
@@ -57,7 +58,7 @@ void LcdOnPorts::writeByte(unsigned char byte_ch, bool as_data)
   delayMicroseconds(60);
 }
 
-void LcdOnPorts::begin(int pin_e, int pin_rs, int pin_d4, int pin_d5, int pin_d6, int pin_d7)
+void BitBangLcd::begin(int pin_e, int pin_rs, int pin_d4, int pin_d5, int pin_d6, int pin_d7)
 {
   _pin_e = pin_e;  _pin_rs = pin_rs;
   _pin_d4 = pin_d4; _pin_d5 = pin_d5; _pin_d6 = pin_d6; _pin_d7 = pin_d7;

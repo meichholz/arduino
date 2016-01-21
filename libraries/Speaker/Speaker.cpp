@@ -1,3 +1,6 @@
+#include "Arduino.h"
+#include "Speaker.h"
+
 // borrowed speaker driver from digidice.
 //
 // This implementation uses PROGMEM data to minimise the sketch footprint, effectively saving some 200 bytes.
@@ -5,7 +8,7 @@
 const uint16_t Speaker::tones[] PROGMEM = {
   // re-generate speaker_tones.h with $PROJECT/generate-tones.rb
   // BUG: the frequencies are off by 5 half tones.
-#include "speaker_tones.h"
+#include "speaker_tones.hx"
 0 };
 
 #define NULL_MELODY  ((signed const char *)0)
@@ -127,4 +130,11 @@ void Speaker::iterate()
   }
 }
 
-
+void Speaker::delayLoop()
+{
+    if (_poll_freq >= 1000) {
+        delayMicroseconds((unsigned int)(1000000L/(long)_poll_freq));
+    } else {
+        delay((unsigned int)(1000L/(long)_poll_freq));
+    }
+}

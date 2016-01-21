@@ -1,11 +1,12 @@
-#include "lcd.h"
+#include "Arduino.h"
+#include "WiredLcd.h"
 #include "Wire.h"
 
 // ==========================================================================
-// specific class: LcdOnI2c
+// specific class: WiredLcd
 // ==========================================================================
 
-LcdOnI2c::LcdOnI2c(int columns, int rows) :
+WiredLcd::WiredLcd(int columns, int rows) :
   Lcd(columns, rows),
   _addr(0x3F),
   _portval(0x00),
@@ -18,37 +19,37 @@ LcdOnI2c::LcdOnI2c(int columns, int rows) :
 {
 }
 
-void LcdOnI2c::setRS(bool state)
+void WiredLcd::setRS(bool state)
 {
   _state_rs = state;
   writePort();
 }
 
-void LcdOnI2c::setE(bool state)
+void WiredLcd::setE(bool state)
 {
   _state_e = state;
   writePort();
 }
 
-void LcdOnI2c::gotoXY(int x, int y)
+void WiredLcd::gotoXY(int x, int y)
 {
   command(0x80 | x | (0x40*y));
 }
 
 // log wait for a command
-void LcdOnI2c::wait()
+void WiredLcd::wait()
 {
   delay(3);
 }
 
-void LcdOnI2c::setPortBit(int bitno, bool bitval)
+void WiredLcd::setPortBit(int bitno, bool bitval)
 {
   byte mask = 0xFF & ( ~ (1 << bitno) );
   byte val = (!!bitval) << bitno;
   _portval = (_portval & mask) | val;
 }
 
-void LcdOnI2c::writeNibble(unsigned char nibble)
+void WiredLcd::writeNibble(unsigned char nibble)
 {
   setPortBit(_pin_d4, nibble&0x01);
   setPortBit(_pin_d5, nibble&0x02);
@@ -61,7 +62,7 @@ void LcdOnI2c::writeNibble(unsigned char nibble)
   delayMicroseconds(2);
 }
 
-void LcdOnI2c::writePort()
+void WiredLcd::writePort()
 {
   setPortBit(_pin_e, _state_e);
   setPortBit(_pin_rs, _state_rs);
@@ -72,7 +73,7 @@ void LcdOnI2c::writePort()
   Wire.endTransmission();
 }
 
-void LcdOnI2c::writeByte(unsigned char byte_ch, bool as_data)
+void WiredLcd::writeByte(unsigned char byte_ch, bool as_data)
 {
   if (as_data) {
     setRS();
@@ -85,7 +86,7 @@ void LcdOnI2c::writeByte(unsigned char byte_ch, bool as_data)
   delayMicroseconds(60);
 }
 
-void LcdOnI2c::begin(int i2c_addr, int pin_e, int pin_rw, int pin_rs, int pin_d4, int pin_d5, int pin_d6, int pin_d7, int pin_bl)
+void WiredLcd::begin(int i2c_addr, int pin_e, int pin_rw, int pin_rs, int pin_d4, int pin_d5, int pin_d6, int pin_d7, int pin_bl)
 {
   _addr = i2c_addr;
   _pin_e = pin_e;  _pin_rs = pin_rs; _pin_rw = pin_rw;

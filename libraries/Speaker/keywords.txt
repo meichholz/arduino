@@ -1,0 +1,23 @@
+# vim:ts=16 noexpandtab
+OpFirstNote	LITERAL1
+OpEndOfTune	LITERAL1
+OpTranspose	LITERAL1
+OpJumpTo	LITERAL1
+
+MelodyGreeter	LITERAL1
+MelodyChordOk	LITERAL1
+MelodyChordError	LITERAL1
+MelodyRolling	LITERAL1
+MelodyGreeter	LITERAL1
+MelodyCooling	LITERAL1
+
+
+Speaker	KEYWORD1
+TMelody	KEYWORD1
+
+play	KEYWORD2
+delayLoop	KEYWORD2
+
+begin	KEYWORD3
+iterate	KEYWORD3
+

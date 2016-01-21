@@ -1,4 +1,5 @@
-#include "lcd.h"
+#include "Arduino.h"
+#include "Lcd.h"
 
 // see http://mil.ufl.edu/3744/docs/lcdmanual/commands.html for bit meanings
 

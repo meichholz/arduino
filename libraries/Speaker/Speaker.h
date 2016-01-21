@@ -22,6 +22,7 @@ class Speaker {
   void  play(TMelody tune);
   void begin(int pin, int pollfreq);
   void iterate();
+  void delayLoop(); // uses pollfreq to pause by delay() or delayMicroseconds()
 
   private:
 
